@@ -23,6 +23,7 @@
 
 Bunny <- function(params, Chain=FALSE) {
 
+  cat(" Bunny Starting ... \n")
   # 1) Load the data
   # Determine the file extension
   fileExtension <- tools::file_ext(params$file.name)

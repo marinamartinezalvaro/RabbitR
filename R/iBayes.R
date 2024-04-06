@@ -19,16 +19,16 @@
 
 
 iBayes <- function(params, bunny) {
-
-  cat(sprintf("%s", "\033[32m Enter the probability for the HPD interval, for example 0.95 (default is 0.95): \033[0m"))
+  cat(" iBayes Starting ... \n")
+  cat(sprintf("%s", "\033[32mEnter the probability for the HPD interval, for example 0.95 (default is 0.95): \033[0m"))
   HPD <- as.numeric(readline())
   HPD <- ifelse(is.na(HPD), 0.95, HPD) # Default to 0.95
 
-  cat(sprintf("%s", "\033[32m Do you want to calculate probability of the estimates being different from 0 (P0)? (Enter True=T or False=F, default is T): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to calculate probability of the estimates being different from 0 (P0)? (Enter True=T or False=F, default is T): \033[0m"))
   P0 <- readline()
   P0 <- ifelse(tolower(P0) == "f", FALSE, TRUE)  # Default to TRUE if input is not "F"
 
-  cat(sprintf("%s", "\033[32m Do you want to calculate a guaranteed value (K) for the estimates with a given probability? (Enter True=T or False=F, default is F): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to calculate a guaranteed value (K) for the estimates with a given probability? (Enter True=T or False=F, default is F): \033[0m"))
   K <- readline()
   K <- tolower(K) == "t"
 
@@ -56,11 +56,11 @@ iBayes <- function(params, bunny) {
     R <- NA
   }
 
-  cat(sprintf("%s", "\033[32m Do you want to save the inferences into a table? (Enter True=T or False=F, default is F): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to save the inferences into a table? (Enter True=T or False=F, default is F): \033[0m"))
   SaveTable <- readline()
   SaveTable <- tolower(SaveTable) == "t"
 
-  cat(sprintf("%s", "\033[32mDo you want to generate and save plots of constrats? (Enter True=T or False=F, default is F): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to generate and save plots of contrasts? (Enter True=T or False=F, default is F): \033[0m"))
   plot <- readline()
   plot <- tolower(plot) == "t"
 

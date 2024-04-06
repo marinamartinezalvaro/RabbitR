@@ -32,6 +32,7 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
                   PR=FALSE, R=FALSE,PS=FALSE,
                   SaveTable=FALSE, plot=FALSE){
 
+  cat(" Bayes Starting ... \n")
   # Ensure that R has an entry for each trait if PR or PS are TRUE
   if((PR || PS) && (!is.vector(R) || length(R) != length(bunny))) {
     stop("When PR is TRUE, R must be a vector with one entry per trait.")
