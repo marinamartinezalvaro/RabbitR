@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of RabbitR is to …
+This is a teaching-oriented package for linear mixed models solved using Bayesian theory. The package includes visualization and characterization of marginal posterior distributions of the estimates.
 
 ## Installation
 
