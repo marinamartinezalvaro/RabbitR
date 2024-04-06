@@ -1,0 +1,29 @@
+Package: RabbitR
+Type: Package
+Title: User fiendly linear mixed model analysis solves with Bayesian
+Version: 0.1.0
+Authors@R: person("Marina", "Martinez-Alvaro", email = "mamaral9@upv.es",
+                  role = c("aut", "cre"))
+Maintainer: The package maintainer <mamaral9@upv.es>
+Description: This is a teaching-oriented package for linear mixed models solved using Bayesian theory.
+    The package includes visualization and characterization of marginal posterior distributions of the estimates.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+Depends: 
+  R (>= 3.6)
+Imports: 
+ HDInterval,
+ ggplot2,
+ tidyr,
+ MCMCglmm,
+ coda,
+ knitr,
+ openxlsx,
+ readxl,
+ utils,
+ dplyr
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
