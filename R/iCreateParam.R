@@ -2,21 +2,46 @@
 #' @title iCreateParam
 #'
 #' @description
-#' Creates a parameter file from interactive questions answered by the user.
+#' This function creates a Parameter Configuration File Interactively.
+#'
+#' This function guides the user through an interactive process to create a
+#' parameter configuration file. It asks a series of questions about the data file and analysis parameters, which it uses to generate a parameter list.
 #'
 #' @details
-#' Data file needs to be located in the working folder.
-#' Data needs to be on .csv or .xlsx format. It admits missing values coded in different ways.
+#' The user is prompted to specify the data file, which must be located in
+#' the working directory. The function supports `.txt`, `.csv`, `.xls`, or `.xlsx`
+#' file formats and allows for the specification of missing value codes. It also
+#' queries the user for information on traits, treatments, noise effects, covariates,
+#' interactions, and random effects to be included in the analysis.
 #'
+#' After gathering all necessary information, the function compiles a comprehensive
+#' list of parameters that can be used for further statistical analysis or modeling.
 #'
-#' @return The output from \code{\link{print}}
+#' Data file must be located in the current working directory. Missing values can
+#' be coded in various ways and should be explicitly identified during the interaction.
+#'
+#' @return A list containing all parameters specified by the user during the interaction.
+#' This list includes information about the data file, missing value codes, number of
+#' traits, treatments, noise effects, covariates, interactions, random effects, and
+#' MCMC characteristics if specified.
+#'
+#' @section Side Effects:
+#' - The function interacts with the user through the console.
+#' - Depending on user input, it may generate warnings or stop execution if expected
+#' conditions are not met (e.g., file not found, unsupported file format).
 #'
 #' @export
 #' @importFrom utils read.csv
 #' @importFrom readxl read_excel
 #' @import dplyr
 #' @import knitr
-
+#' @examples
+#' \dontrun{
+#' # Run the function in an interactive R session
+#' # Note: Actual usage requires user input during execution
+#' # Example (single use)
+#' parameter_list <- iCreateParam()
+#'}
 
 iCreateParam <- function() {
 
@@ -26,6 +51,7 @@ iCreateParam <- function() {
   cat("\n")
   while(!file.exists(file.name)==TRUE) {
     cat("\033[32m", paste("DATA FILE", file.name, "NOT FOUND", sep = " "), "\033[0m\n")
+    cat("\n")
     cat(sprintf("%s ", "\033[32mEnter the name of the datafile with its extension .txt, .csv, .xls or .xlsx \033[0m"))
     file.name <- readline()
      }
@@ -34,6 +60,7 @@ iCreateParam <- function() {
   Missing <- readline()
   while((Missing!= "y") && (Missing!= "n") && (Missing!= "Y") && (Missing!= "N") ==TRUE){
     cat(sprintf("%s ", "\033[32mWeird response, try again! \033[0m"))
+    cat("\n")
     cat(sprintf("%s ", "\033[32mHas the data file missing values? (Enter Yes=Y or No=N) \033[0m"))
     Missing <- readline()}
 
@@ -88,6 +115,7 @@ iCreateParam <- function() {
         hTrait[n]<- readline()
           while (!hTrait[n]%in%colnames(data)==TRUE) {
             cat(sprintf("%s ", "\033[32mTrait not found. Please check that spelling is correct \033[0m"))
+            cat("\n")
             cat("\033[32m", paste("Enter the name of the Trait ", n, sep = " "), "\033[0m\n")
             hTrait[n]<- readline()
           }
@@ -171,8 +199,9 @@ iCreateParam <- function() {
       cat("\033[32m", paste("Enter the name of Treatment ", n, sep = " "), "\033[0m\n")
       hTreatment[n] <- readline()
       while (!hTreatment[n]%in%colnames(data)==TRUE) {
-          cat(sprintf("%s ", "\033[32mTreatment not found. Please check that spelling is correct \033[0m"))
-          cat("\033[32m", paste("Enter the name of Treatment ", n, sep = " "), "\033[0m\n")
+        cat(sprintf("%s ", "\033[32mTreatment not found. Please check that spelling is correct \033[0m"))
+        cat("\n")
+        cat("\033[32m", paste("Enter the name of Treatment ", n, sep = " "), "\033[0m\n")
           hTreatment[n] <- readline()
         }
         pTreatment[n] <- which(colnames(data)== hTreatment[n])
@@ -189,6 +218,7 @@ iCreateParam <- function() {
       askCompare <- readline()
       while((askCompare!= "d") && (askCompare!= "D") && (askCompare!= "R") && (askCompare!= "r") ==TRUE){
         cat(sprintf("%s ", "\033[32mWeird response, try again! \033[0m"))
+        cat("\n")
         cat(sprintf("%s ", "\033[32mComparisons between treatment levels:   (Enter DIFFERENCE=D or RATIO=R) \033[0m"))
         askCompare <- readline()}
 
@@ -216,6 +246,7 @@ iCreateParam <- function() {
         hNoise[n] <-readline()
         while (!hNoise[n]%in%colnames(data)==TRUE) {
           cat(sprintf("%s ", "\033[32mNoise effect not found. Please check that spelling is correct \033[0m"))
+          cat("\n")
           cat("\033[32m", paste("Enter the name of the Noise effect ", n, sep = " "), "\033[0m\n")
           hNoise[n] <-readline()
         }
@@ -280,6 +311,7 @@ iCreateParam <- function() {
             hCov[n] <-  readline()
             while (!hCov[n]%in%colnames(data)==TRUE) {
               cat(sprintf("%s ", "\033[32mCovariate not found. Please check that spelling is correct \033[0m"))
+              cat("\n")
               cat("\033[32m", paste("Enter the name of Covariate ", n, sep = " "), "\033[0m\n")
               hCov[n] <-  readline()
             }
@@ -312,6 +344,7 @@ iCreateParam <- function() {
 
         while((askInterFix!= "y") && (askInterFix!= "n") && (askInterFix!= "Y") && (askInterFix!= "N") ==TRUE){
           cat(sprintf("%s ", "\033[32mWeird response, try again! \033[0m"))
+          cat("\n")
           cat(sprintf("%s ", "\033[32mDo you want to consider any interactions of order 2  (Enter Yes=Y or No=N)  ? \033[0m"))
           askInterFix <- readline()}
 
@@ -334,6 +367,7 @@ iCreateParam <- function() {
             hInter[n,1] <-readline()
             while (!hInter[n,1]%in%colnames(data)==TRUE) {
               cat(sprintf("%s ", "\033[32mEffect not found. Please check that spelling is correct \033[0m"))
+              cat("\n")
               cat("\033[32m", paste("Enter the name of the first effect to be considered in the interaction ", n, sep = " "), "\033[0m\n")
               hInter[n,1] <-readline()
             }
@@ -353,6 +387,7 @@ iCreateParam <- function() {
 
             while (!hInter[n,2]%in%colnames(data)==TRUE) {
               cat(sprintf("%s ", "\033[32mEffect not found. Please check that spelling is correct \033[0m"))
+              cat("\n")
               cat("\033[32m", paste("Enter the name of the second effect to be considered in the interaction ", n, sep = " "), "\033[0m\n")
               hInter[n,1] <-readline()
             }
@@ -398,6 +433,7 @@ iCreateParam <- function() {
             hRand[n] <- readline()
             while (!hRand[n]%in%colnames(data)==TRUE) {
               cat(sprintf("%s ", "\033[32mRandom effect not found. Please check that spelling is correct \033[0m"))
+              cat("\n")
               cat("\033[32m", paste("Enter the name of the random effect ", n, sep = " "), "\033[0m\n")
               hRand[n] <- readline()
             }
@@ -466,6 +502,7 @@ iCreateParam <- function() {
           askMCMC     <- readline()
           while((askMCMC!= "y") && (askMCMC!= "Y") && (askMCMC!= "n") && (askMCMC!= "N") ==TRUE){
             cat(sprintf("%s ", "\033[32mWeird response, try again! \033[0m"))
+            cat("\n")
             cat(sprintf("%s ", "\033[32mDo you want to establish the MCMC characteristics  (Enter Yes=Y or No=N) ? \033[0m"))
             askMCMC     <- readline()
             }

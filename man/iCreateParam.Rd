@@ -7,12 +7,42 @@
 iCreateParam()
 }
 \value{
-The output from \code{\link{print}}
+A list containing all parameters specified by the user during the interaction.
+This list includes information about the data file, missing value codes, number of
+traits, treatments, noise effects, covariates, interactions, random effects, and
+MCMC characteristics if specified.
 }
 \description{
-Creates a parameter file from interactive questions answered by the user.
+This function creates a Parameter Configuration File Interactively.
+
+This function guides the user through an interactive process to create a
+parameter configuration file. It asks a series of questions about the data file and analysis parameters, which it uses to generate a parameter list.
 }
 \details{
-Data file needs to be located in the working folder.
-Data needs to be on .csv or .xlsx format. It admits missing values coded in different ways.
+The user is prompted to specify the data file, which must be located in
+the working directory. The function supports `.txt`, `.csv`, `.xls`, or `.xlsx`
+file formats and allows for the specification of missing value codes. It also
+queries the user for information on traits, treatments, noise effects, covariates,
+interactions, and random effects to be included in the analysis.
+
+After gathering all necessary information, the function compiles a comprehensive
+list of parameters that can be used for further statistical analysis or modeling.
+
+Data file must be located in the current working directory. Missing values can
+be coded in various ways and should be explicitly identified during the interaction.
+}
+\section{Side Effects}{
+
+- The function interacts with the user through the console.
+- Depending on user input, it may generate warnings or stop execution if expected
+conditions are not met (e.g., file not found, unsupported file format).
+}
+
+\examples{
+\dontrun{
+# Run the function in an interactive R session
+# Note: Actual usage requires user input during execution
+# Example (single use)
+parameter_list <- iCreateParam()
+}
 }

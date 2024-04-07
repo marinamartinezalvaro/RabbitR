@@ -2,37 +2,86 @@
 #' @title CreateParam
 #'
 #' @description
-#' Creates a parameter file from different arguments input by the user.
+#' This function Generates a Parameter Configuration Non-interactively.
 #'
-#' @param file.name is the file path of the data file (valid formats are .csv and .xlsx)
-#' @param na.codes is a character of how missing values are coded
-#' @param hTrait is a vector c() with the name of the traits separated by commas
-#' @param pTrait is a vector c() with the column position of the traits separated by commas. User can specify traits using either hTrait, pTrait or both.
-#' @param hTreatment is a vector c() with the name of the treatments effects separated by commas.
-#' @param pTreatment is a vector c() with the column position of the treatments effects separated by commas. To specify treatment effects, user can enter either hTreatment, pTreatment or both.
-#' @param askCompare The way you want to compare the levels of your Treatments. Is either "D" for difference, "R" for ratio, or "NA" if not applicable. Default value is D
-#' @param hNoise is a vector c() with the name of the noise effects separated by commas.
-#' @param pNoise is a vector c() with the column position of the noise effects separated by commas. User can specify noise effects using either hNoise, pNoise or both.
-#' @param hCov is a vector c() with the name of the covariates
-#' @param pCov is a vector c() with the column position of the covariates separated by commas. User can specify covariates using either hCov, pCov or both.
-#' @param hInter is a matrix of dimensions n x 2 with n being the number of order 2 interactions to be considered, and the two columns indicate the name of the two interaction components (treatments, noise or covariates). For example, If considering two interactions between effects AE and Sex and AE and pH, argument needs to be entered as hInter=c("AE","Sex","AE","pH").
-#' @param pInter is a matrix of dimensions n x 2 with n being the number of order 2 interactions to be considered, and the two columns indicate the column position of the two interaction components (treatments, noise or covariates). For example, If considering two interactions between effects positioned in columns 3 and 4 and 3 and 5, argument needs to be entered as pInter=c(3,4,3,5). User can specify noise effects using either hInter, pInter or both.
-#' @param typeInter is a matrix of dimensions n x 2 with n being the number of order 2 interactions to be considered, and the two columns indicate if the components of the interaction are factors "F" or covariates "C".Its a mandantory argument if either hInter o pInter are not NULL. Example for two Interaction, one factor by factor and the other one factor by covariate, argument needs to be entered as typeInter=c("F","F","F","C").
-#' @param ShowInter is a character vector specifying how interactions should be classified: either as treatments ("T") or as noise ("N"). Each element in the vector corresponds to an interaction defined in the model, and thus, the length of `ShowInter` must match the number of interactions specified. Its a mandantory argument if either hInter o pInter are not NULL.
-#' @param hRand is a vector c() with the name of the random effects separated by commas.
-#' @param pRand is a vector c() with the column position of the random effects separated by commas. User can specify random effects using either hRand, pRand or both.
-#' @param Seed is a random number to initialize the sampling. Useful when aiming to get replicated results.
-#' @param iter is the number of MCMC iterations. Default is 30 000.
-#' @param burnin is the number of initial MCMC iterations to be discarded. Default is 5000.
-#' @param lag is the thinning interval. Default is 10.
+#' This function allows users to specify parameters for a statistical analysis
+#' or modeling through direct arguments, bypassing the interactive process.
+#' It supports defining various model components, including traits, treatments,
+#' noise effects, covariates, interactions, and random effects.
 #'
-#' @return
+#' @param file.name String specifying the path to the data file, which must be in`.csv` or `.xlsx` format
+#' @param na.codes Character vector specifying how missing values are encoded in the data file. Default codes are `c("", "NA", "NULL")`.
+#' @param hTrait Vector specifying the names of the traits. Users can specify traits using either hTrait, pTrait or both arguments.
+#' @param pTrait Vector specifying the column positions in the data file of the traits. Users can specify traits using either hTrait, pTrait or both arguments.
+#' @param hTreatment Vector specifying the names of the treatment effects. Users can specify treatment effects using either hTreatment, pTreatment or both arguments.
+#' @param pTreatment Vector specifying the column positions in the data file of the treatment effects. Users can specify treatment effects using either hTreatment, pTreatment or both arguments.
+#' @param askCompare Character specifying how to compare treatment levels: `"D"`for difference, `"R"` for ratio, or `"NA"` if not applicable. Default is `"D"`.
+#' @param hNoise Vector specifying the names of the noise effects. Users can specify noise effects using either hNoise, pNoise or both arguments.
+#' @param pNoise Vector specifying the column positions in the data file of the noise effects. Users can specify noise effects using either hNoise, pNoise or both arguments.
+#' @param hCov Vector specifying the names of the covariates. Users can specify covariates using either hCov, pCov or both arguments.
+#' @param pCov Vector specifying the column positions in the data file of the covariates. Users can specify covariates using either hCov, pCov or both arguments.
+#' @param hInter Matrix of dimensions n x 2 with n being the number of order 2 interactions. Rows specify the names of the components involved in the interactions. Specification can be through either hInter, pInter or both arguments.
+#' @param pInter Matrix of dimensions n x 2 with n being the number of order 2 interactions. Rows specify column positions in the data file of the components involved in the interactions. Specification can be through either hInter, pInter or both arguments.
+#' @param typeInter Matrix n x 2 indicating whether components of each interaction are factors (`"F"`) or covariates (`"C"`). Mandatory if `hInter` or `pInter` are not `NULL`.
+#' @param ShowInter Character vector of length equal to number of interactions indicating how each interaction should be classified, as treatments (`"T"`) or noise (`"N"`). Mandatory if `hInter` or `pInter` are not `NULL`.
+#' @param hRand Vector specifying the names of the random effects. Users can specify random effects using either hRand, pRand or both arguments.
+#' @param pRand Vector specifying the column positions in the data file of the random effects. Users can specify random effects using either hRand, pRand or both arguments.
+#' @param Seed Integer used as a random seed for MCMC sampling to ensure reproducibility.Default is `1234`.
+#' @param iter Integer specifying the number of MCMC iterations. Default is `30000`.
+#' @param burnin Integer specifying the number of initial MCMC iterations to be discarded.Default is `5000`.
+#' @param lag Integer specifying the thinning interval for MCMC sampling. Default is `10`.
+#'
+#' @return A list of all specified parameters ready for use in subsequent statistical analysis
+#' or modeling. This includes detailed specifications of traits, treatments, noise effects,
+#' covariates, interactions, random effects, and MCMC characteristics.
+#'
+#' @section Side Effects:
+#' - The function directly processes the specified parameters without interactive input,
+#' facilitating script-based workflows.
+#' - It reads the specified data file and may stop execution if the file does not exist
+#' or is in an unsupported format.
+#'
 #' @export
 #' @importFrom utils read.csv
 #' @importFrom readxl read_excel
 #' @import dplyr
 #' @import knitr
 #' @examples
+#' \dontrun{
+#'# Example usage :
+#'# Example 1: Basic usage with mandatory parameters (model including only the mean)
+#' param_list_basic <- CreateParam(
+#'  file.name = "~/Dropbox/Rpackages/RabbitR/DataFixed.csv",
+#'  hTrait = c("LW", "IMF", "PFat"))
+#'
+#'
+#'# Example 2: using column positions instead of header in some arguments
+#' param_list_positions <- CreateParam(
+#'   file.name = "~/Dropbox/Rpackages/RabbitR/DataFixed.csv",
+#'   pTrait = c(5, 7, 8),  # Corresponds to LW, IMF, PFat
+#'   pTreatment = 1,       # Corresponds to AE
+#'   pNoise = 2,           # Corresponds to OP
+#'   pCov = "pH",
+#'   Seed = 2024,
+#'   iter = 30000,
+#'   burnin = 6000,
+#'   lag = 12
+#' )
+#'
+#'# Example 3: model with treatment, noise, covariates and random effects
+#'param_list_complex <- CreateParam(
+#'  file.name = "DataFixed.csv",
+#'  hTrait = c("IMF", "PFat"),
+#'  hTreatment = "AE",
+#'  hNoise = "OP",
+#'  hCov = c("pH", "LW"),
+#'  hRand = "Sex",
+#'  Seed = 1234,
+#'  iter = 40000,
+#'  burnin = 8000,
+#'  lag = 20
+#')
+#'}
 
 
 

@@ -2,16 +2,26 @@
 % Please edit documentation in R/Rabbit.R
 \name{Rabbit}
 \alias{Rabbit}
-\title{Title Rabbit}
+\title{Rabbit}
 \usage{
-Rabbit()
+Rabbit(Chain = FALSE)
 }
 \arguments{
-\item{Chain}{Logical (default=FALSE). If TRUE, all the samples of the posterior distributions of the estimated parameters are stored for each trait.}
+\item{Chain}{A logical value (default is `FALSE`). If set to `TRUE`, the function stores all samples of the posterior distributions of the estimated parameters for each trait, allowing for detailed post-hoc analysis.}
 }
 \value{
-three lists: params (containing the parameter file), bunny (a list containing the samples of the posterior distributions of the estimated parameters for each trait), and inferences (a list with the inferences computed for each trait)
+Returns a list with computed inferences for each trait, including model means, treatments, contrasts, covariates, variance components, and probabilities associated with specified thresholds.
 }
 \description{
-this function `runs general linear models and computes inferences from posterior chains.Its a didactic function as it has no arguments and all required information is interactively obtain through questions answered by the user
+This function runs an Interactive Analysis with General Linear Models and Bayesian Inferences. `Rabbit` serves as an all-in-one interactive function for running general linear models, generating posterior distributions, and computing inferences.
+}
+\details{
+`Rabbit` integrates several steps of Bayesian analysis into a single, interactive function. Starting with parameter specification via `iCreateParam`, it proceeds to model execution with `Bunny`, and concludes with inferential statistics using `iBayes`. This function is particularly useful for educational purposes, offering a hands-on experience with Bayesian statistical analysis. Users are prompted to input various parameters and options at different stages, ensuring a tailored analysis process.
+}
+\examples{
+\dontrun{
+# Example
+results <- Rabbit()
+results <- Rabbit(Chain=TRUE)
+}
 }

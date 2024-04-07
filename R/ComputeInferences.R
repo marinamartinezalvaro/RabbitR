@@ -1,26 +1,31 @@
-#' Title ComputeInferences
+#' @title ComputeInferences
 #'
 #'@description
-#'this function makes inferences from posterior chains.
+#' This function calculates Statistical Inferences from Posterior Distributions
 #'
-#' @param samples its an numeric vector containing samples from a posterior chain of any estimate
-#' @param HPD a scalar from 0 to 1 specifying the amount of probability within the highest posterior density interval to be calculated.
-#' @param P0 Logical (default=TRUE). If TRUE, the probability of the estimate to be greater than 0 if the median is positive, or lower than 0 if the median is negative, will be computed.
-#' @param K Logical (default=FALSE). If TRUE, a guaranteed value of the estimate with probability Kprob is computed. Only displayed if K has the same sign as the median of the posterior chain.
-#' @param probK a numeric value from 0 to 1 indicating the probability to consider in K. If K=TRUE and probK is not specified, a default value of 0.8 will be used.
-#' @param PR Logical (default=FALSE). If TRUE, the probability of the posterior chain to be greater than a relevant value (R) if the median is positive, or lower than R if the median is negative, will be computed.
-#' @param R a scalar containing a relevant value for computing PR. If any PR or PS is TRUE, this argument is mandatory.
-#' @param PS Logical (default=FALSE). If TRUE, the probability of similarity of the estimate is computed. This is, the posterior probability that the estimate is between -R and R.
-#' @param askCompare can be either "D" or "R". If "D", PR is computed assuming -R as threshold if the median is <0, and PS is computed between -R and R. If "R", PR is computed assuming 1/R as threshold if the median is <1, and PS is computed between 1/R and R.
+#' @param samples A numeric vector containing samples from a posterior distribution of any estimate.
+#' @param HPD A scalar value between 0 and 1 specifying the desired probability to compute the highest posterior density (HPD) interval. Default value is 0.95.
+#' @param P0 A logical (default is `TRUE`). If `TRUE`, computes the probability that the posterior distribution is greater than zero if the median is positive, or less than zero if the median is negative.
+#' @param K A logical(default is `FALSE`). If `TRUE`, computes a "guaranteed" value of the posterior distribution with a specified probability (`probK`). This value is only displayed if its sign matches the sign of the median of the posterior distribution.
+#' @param probK A numeric value between 0 and 1 specifying the probability threshold for computing the guaranteed value when `K` is `TRUE`. If `K` is `TRUE` and `probK` is not specified, a default value of 0.80 is used.
+#' @param PR A logical (default is `FALSE`). If `TRUE`, computes the probability that the posterior distribution is greater than a relevant value (`R`) if the median is positive, or less than `R` if the median is negative.
+#' @param R A scalar specifying a relevant value for computing `PR`. It's mandatory if `PR` or `PS` is `TRUE`.
+#' @param PS A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R`
+#' @param askCompare Specifies the mode of comparison, either "D" for differences or "R" for ratios, affecting how `PR` and `PS` are calculated. If "D", PR is computed assuming -R as threshold if the median is <0, and PS is computed between -R and R. If "R", PR is computed assuming 1/R as threshold if the median is <1, and PS is computed between 1/R and R.
 #'
-#' @return a numeric vector with the Inferences of the posterior chains
-#' @import HDInterval
+#' @return Returns a numeric vector containing calculated inferences from the posterior samples
+#' @importFrom HDInterval hdi
 #' @export
 #'
 #' @examples
-#'  # Example usage:
-#'  # Inferences <- computeInferences(samples)
-#'  # Inferences <- computeInferences(samples, askCompare="R", P0=TRUE, K=TRUE, probK=0.8, PR=TRUE, R=1.1, PS=FALSE)
+#' \dontrun{
+#'  # Example:
+#'  # Basic inference calculation
+#'  basic_inf <- computeInferences(samples)
+#'  # Advanced inference calculation with custom settings
+#'  advanced_inf <- computeInferences(samples, askCompare="R", HPD=0.7, P0=TRUE, K=TRUE,
+#'  probK=0.8, PR=TRUE, R=1.1, PS=FALSE)
+#'}
 
 ComputeInferences <- function(samples, HPD=0.95, P0=TRUE, K=FALSE, probK=0.8, PR=FALSE, R=NULL, PS=FALSE, askCompare="D") {
 
@@ -36,7 +41,7 @@ ComputeInferences <- function(samples, HPD=0.95, P0=TRUE, K=FALSE, probK=0.8, PR
   est <- median(samples)
   meanVal <- mean(samples)
   sdVal <- sd(samples)
-  hpdInterval <- hdi(samples, credMass = HPD)
+  hpdInterval <- HDInterval::hdi(samples, credMass = HPD)
 
   # Initialize P0 and prValue
   p0 <- NA
