@@ -22,7 +22,7 @@
 #' @import readxl
 #' @importFrom utils read.csv
 #' @import dplyr
-#' @import ggdist
+#' @importFrom ggdist stat_halfeye
 #' @export
 #'
 #' @examples

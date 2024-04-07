@@ -10,7 +10,7 @@
 #' @importFrom HDInterval hdi
 #' @import ggplot2
 #' @import tidyr
-#' @import ggdist
+#' @importFrom ggdist stat_halfeye
 #' @export
 #'
 #' @examples
