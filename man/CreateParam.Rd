@@ -29,7 +29,7 @@ CreateParam(
 )
 }
 \arguments{
-\item{file.name}{String specifying the path to the data file, which must be in`.csv` or `.xlsx` format}
+\item{file.name}{String between commas " " specifying the name or name and path to the data file (if its not in the working directory), which must be in`.csv`,`.xlsx` or format `.txt`. If the datafile its preloaded in the environment, the name of the data can be input as a string "" without extension (It requires a data frame).}
 
 \item{na.codes}{Character vector specifying how missing values are encoded in the data file. Default codes are `c("", "NA", "NULL")`.}
 
@@ -95,15 +95,15 @@ or is in an unsupported format.
 \examples{
 \dontrun{
 # Example usage :
-# Example 1: Basic usage with mandatory parameters (model including only the mean)
+# Example 1: Basic usage with mandatory parameters (model including only the mean) (data not imported and located outside the working directory)
 param_list_basic <- CreateParam(
  file.name = "~/Dropbox/Rpackages/RabbitR/DataIMF.csv",
  hTrait = c("LW", "IMF", "PFat"))
 
 
-# Example 2: using column positions instead of header in some arguments
+# Example 2: using column positions instead of header in some arguments (data preloaded in the environment)
 param_list_positions <- CreateParam(
-  file.name = "~/Dropbox/Rpackages/RabbitR/DataIMF.csv",
+  file.name = "DataIMF",
   pTrait = c(5, 7, 8),  # Corresponds to LW, IMF, PFat
   pTreatment = 1,       # Corresponds to AE
   pNoise = 2,           # Corresponds to OP
@@ -114,7 +114,7 @@ param_list_positions <- CreateParam(
   lag = 12
 )
 
-# Example 3: model with treatment, noise, covariates and random effects
+# Example 3: model with treatment, noise, covariates and random effects (data not imported and located in the working directory )
 param_list_complex <- CreateParam(
  file.name = "DataIMF.csv",
  hTrait = c("IMF", "PFat"),

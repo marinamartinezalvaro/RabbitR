@@ -9,7 +9,7 @@
 #' It supports defining various model components, including traits, treatments,
 #' noise effects, covariates, interactions, and random effects.
 #'
-#' @param file.name String specifying the path to the data file, which must be in`.csv` or `.xlsx` format
+#' @param file.name String between commas " " specifying the name or name and path to the data file (if its not in the working directory), which must be in`.csv`,`.xlsx` or format `.txt`. If the datafile its preloaded in the environment, the name of the data can be input as a string "" without extension (It requires a data frame).
 #' @param na.codes Character vector specifying how missing values are encoded in the data file. Default codes are `c("", "NA", "NULL")`.
 #' @param hTrait Vector specifying the names of the traits. Users can specify traits using either hTrait, pTrait or both arguments.
 #' @param pTrait Vector specifying the column positions in the data file of the traits. Users can specify traits using either hTrait, pTrait or both arguments.
@@ -49,15 +49,15 @@
 #' @examples
 #' \dontrun{
 #'# Example usage :
-#'# Example 1: Basic usage with mandatory parameters (model including only the mean)
+#'# Example 1: Basic usage with mandatory parameters (model including only the mean) (data not imported and located outside the working directory)
 #' param_list_basic <- CreateParam(
 #'  file.name = "~/Dropbox/Rpackages/RabbitR/DataIMF.csv",
 #'  hTrait = c("LW", "IMF", "PFat"))
 #'
 #'
-#'# Example 2: using column positions instead of header in some arguments
+#'# Example 2: using column positions instead of header in some arguments (data preloaded in the environment)
 #' param_list_positions <- CreateParam(
-#'   file.name = "~/Dropbox/Rpackages/RabbitR/DataIMF.csv",
+#'   file.name = "DataIMF",
 #'   pTrait = c(5, 7, 8),  # Corresponds to LW, IMF, PFat
 #'   pTreatment = 1,       # Corresponds to AE
 #'   pNoise = 2,           # Corresponds to OP
@@ -68,7 +68,7 @@
 #'   lag = 12
 #' )
 #'
-#'# Example 3: model with treatment, noise, covariates and random effects
+#'# Example 3: model with treatment, noise, covariates and random effects (data not imported and located in the working directory )
 #'param_list_complex <- CreateParam(
 #'  file.name = "DataIMF.csv",
 #'  hTrait = c("IMF", "PFat"),
@@ -105,10 +105,16 @@ CreateParam <- function(file.name,
       if(!is.null(na.codes)){
       param_list[["na.codes"]] <- na.codes
       }
-      #Read the file
-      if (!file.exists(file.name)) {
-        stop("Error: The file does not exist.")
+
+      # Check if file.name is an object in the environment or a file
+      if (exists(file.name, where = .GlobalEnv) && tools::file_ext(file.name) == ""){
+
+      #For files already in the environment
+        data <- get(file.name)
+        if (!inherits(data, "data.frame")) {
+          stop("Error: The object is not a data frame.")  }
       }
+      else if (file.exists(file.name)) {
 
       # Determine the file extension
       fileExtension <- tools::file_ext(file.name)
@@ -134,6 +140,11 @@ CreateParam <- function(file.name,
       if (fileExtension %in% c("xls", "xlsx")) {
          data[is.na(data)] <- NA  # Example: Converting custom NA codes if necessary
        }
+
+    }
+      else {stop("Error: The file does not exist.")}
+
+#End for new files
 
       # Display number of rows and Descriptive summary
       ri=nrow(data)

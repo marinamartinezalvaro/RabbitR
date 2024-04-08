@@ -28,29 +28,43 @@ Bunny <- function(params, Chain=FALSE) {
 
   cat(" Bunny Starting ... \n")
   # 1) Load the data
-  # Determine the file extension
-  fileExtension <- tools::file_ext(params$file.name)
 
-  # Choose the reading function based on the file extension
-  switch(fileExtension,
-         csv = {
-           data <- read.csv(params$file.name, na.strings=params$na.codes)
-         },
-         xls = {
-           data <- read_excel(params$file.name)
-         },
-         xlsx = {
-           data <- read_excel(params$file.name)
-         },
-         txt = {
-           data <- read.table(params$file.name, na.strings=params$na.codes)
-         },
-         stop("Error: Unsupported file format")
-  )
+  # Check if file.name is an object in the environment or a file
+  if (exists(params$file.name, where = .GlobalEnv) && tools::file_ext(params$file.name) == ""){
 
-  # Additional processing for Excel files if needed
-  if (fileExtension %in% c("xls", "xlsx")) {
-    data[is.na(data)] <- NA  # Example: Converting custom NA codes if necessary
+    #For files already in the environment
+    data <- get(params$file.name)
+    if (!inherits(data, "data.frame")) {
+      stop("Error: The object is not a data frame.")  }
+  }
+
+  #Check if needs to be imported
+  else if (file.exists(params$file.name)) {
+
+    # Determine the file extension
+    fileExtension <- tools::file_ext(params$file.name)
+
+    # Choose the reading function based on the file extension
+    switch(fileExtension,
+           csv = {
+             data <- read.csv(params$file.name, na.strings=params$na.codes)
+           },
+           xls = {
+             data <- read_excel(params$file.name)
+           },
+           xlsx = {
+             data <- read_excel(params$file.name)
+           },
+           txt = {
+             data <- read.table(file.name, na.strings=params$na.codes)
+           },
+           stop("Error: Unsupported file format")
+    )
+
+    # Additional processing for Excel files if needed
+    if (fileExtension %in% c("xls", "xlsx")) {
+      data[is.na(data)] <- NA  # Example: Converting custom NA codes if necessary
+    }
   }
 
   #Current version removes missing values in any of the right side of the model

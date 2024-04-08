@@ -55,18 +55,52 @@ The RabbitR package applies the same model framework to all traits:
 
 IMF = m + Sex + AE + OP + b·LW + Rand(c) + e
 PFat = m + Sex + AE + OP + b·LW + Rand(c) + e
-To facilitate this analysis, we will employ the CreateParam, Bunny and Bayes functions. This pipeline will go trough the process of running general linear models, generating posterior distributions, and computing inferences.
 
-```{r Inferences, echo = FALSE}
+To carry out our analysis, we'll utilize the CreateParam, Bunny, and Bayes functions. This workflow covers creating a parameter file (CreateParam), executing general linear models and producing posterior distributions (Bunny), and performing inferences (Bayes). For beginners or those less familiar with R, interactive versions are available: iCreateParam for CreateParam and iBayes for Bayes. Additionally, the Rabbit function merges iCreateParam, Bunny, and iBayes into a comprehensive, interactive tool, ideal for educational purposes.
 
-CreateParam(
-  file.name = "~/Dropbox/Rpackages/RabbitR/DataIMF.csv",
+Lets start creating our parameter file. 
+To initiate our analysis, we'll create a parameter file using a CreateParam function. User can specify Traits, Treatments, Noise, covariates, or random effects. You can define these either by their column names in the data file (hTrait, hTreatment, hNoise, hCov, hRand) or by their positions (pTrait, pTreatment, pNoise, pCov, pRand), useful for analyzing multiple traits. The askCompare argument lets you choose how to contrast different treatment levels (e.g., sex1 and Sex2) - as a difference (askCompare="D") or a ratio (askCompare="R").
+
+```{r CreateParam, echo = TRUE}
+
+param_list<-CreateParam(
+  file.name = "DataIMF",
+  na.codes="99999",
   hTrait = c("IMF", "PFat"),
   hTreatment = "Sex",
+  askCompare="D",
   hNoise = c("AE", "OP"),
   hCov = c("LW"),
   hRand = "c")
 
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+Once the parameter file is ready, we can proceed to fit our model with Bunny
+
+```{r Bunny, echo = TRUE}
+
+bunny_results <- Bunny(params = param_list, Chain = FALSE)
+
+```
+
+
+Function Bunny creates a list containing the samples of the posterior chains for the model mean, means of treatment levels, contrats between those levels, covariates, variance components (residual and random). The bunny output will serve as input for function Bayes, together with my param_list object.
+
+Although posterior chains might seem complex at first, they offer us the ability to make multiple inferences from the entire distribution, not just single-point estimates-making our analysis more engaging. The function simplifies in-depth analysis of posterior distributions from Bayesian mixed models. For instance, we calculate the probability of the difference between Sex1 and Sex2 exceeding critical values (0.05 for IMF and 1 for PFat) and obtain guaranteed values for treatment means, covariates, and contrasts at a 90% confidence level. Enabling plot=TRUE visually presents these distributions, with dashed lines at 0 and R clarifying the positions of P0, PR, and PS. 
+
+```{r Bayes, echo = TRUE}
+
+inferences <- Bayes(
+   params = param_list,
+   bunny = bunny_results,
+   HPD = 0.95,
+   K = TRUE, # Compute a guaranteed value of the estimate
+   probK = 0.90, # With 90% probability
+   PR = TRUE, # Compute the probability of the posterior chain being greater than a relevant value
+   R = c(0.05, 1), # Assuming two traits with relevant values specified
+   PS = TRUE, # Compute probability of similarity
+   SaveTable = TRUE, # Save detailed inferences in a CSV file
+   plot = TRUE) # Additionally, generate plots for contrasts)
+
+```
+
