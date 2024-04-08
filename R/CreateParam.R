@@ -51,13 +51,13 @@
 #'# Example usage :
 #'# Example 1: Basic usage with mandatory parameters (model including only the mean)
 #' param_list_basic <- CreateParam(
-#'  file.name = "~/Dropbox/Rpackages/RabbitR/DataFixed.csv",
+#'  file.name = "~/Dropbox/Rpackages/RabbitR/DataIMF.csv",
 #'  hTrait = c("LW", "IMF", "PFat"))
 #'
 #'
 #'# Example 2: using column positions instead of header in some arguments
 #' param_list_positions <- CreateParam(
-#'   file.name = "~/Dropbox/Rpackages/RabbitR/DataFixed.csv",
+#'   file.name = "~/Dropbox/Rpackages/RabbitR/DataIMF.csv",
 #'   pTrait = c(5, 7, 8),  # Corresponds to LW, IMF, PFat
 #'   pTreatment = 1,       # Corresponds to AE
 #'   pNoise = 2,           # Corresponds to OP
@@ -70,7 +70,7 @@
 #'
 #'# Example 3: model with treatment, noise, covariates and random effects
 #'param_list_complex <- CreateParam(
-#'  file.name = "DataFixed.csv",
+#'  file.name = "DataIMF.csv",
 #'  hTrait = c("IMF", "PFat"),
 #'  hTreatment = "AE",
 #'  hNoise = "OP",
