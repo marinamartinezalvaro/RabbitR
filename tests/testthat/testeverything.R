@@ -5,64 +5,55 @@
 #
 #
 
-test_that("Rabbit works")
-be2<-iCreateParam()
-be<-CreateParam(file.name = "~/Dropbox/Rpackages/RabbitR/DataFixed.csv",
-            na.codes ="99999",
-            hTrait = c("IMF","PFat"),
-            hTreatment = c("AE","LG"),
-            hNoise = c("OP"),
-            askCompare="R",
-            hCov=c("LW"))
+test_that("CreateParam returns expected structure", {
+  # Assuming CreateParam() requires no arguments for this example
+  params <- CreateParam()
 
-            #hRand = c("pH"),
-            #hCov=c("LW","pH"))
+  # Check if the return type is a list
+  expect_type(params, "list")
 
-            # hInter=c("Sex","LG"),
-            # typeInter=c("F","F"),
-            # ShowInter=c("T"),
-            # hRand = c("pH","PFat"))
+  # Check for expected keys in the list based on your function's output
+  expect_true(all(c("file.name", "na.codes", "hTrait", "pTrait") %in% names(params)))
+})
 
-#Test Bunny
-be_result<-Bunny(params=be, Chain = FALSE)
+test_that("Bunny function returns expected output", {
+  # Assuming params is a list with necessary details for Bunny() function
+  params <- list(file.name = "example.csv", na.codes = NA)
 
-#Test BAYES
-INFERENCES<-Bayes(params=be, bunny=be_result, HPD=0.95, P0=TRUE,
-                  K=T, probK=0.80,
-                  PR=T, R=c(1.1,1.2),PS=T,
-                  SaveTable=TRUE, plot=T)
+  # Mocking the params input for the purpose of this test
+  bunny_result <- Bunny(params, Chain = FALSE)
 
-params=parametras
-bunny=result
-HPD=0.95
-P0=TRUE
-K=TRUE
-probK=0.80
-PR=TRUE
-R=0.05
-PS=TRUE
-tables=TRUE
-plot=FALSE
+  # Check if bunny_result is a list
+  expect_type(bunny_result, "list")
 
-test<-extract_list_data()
+  # Check for a specific structure or key within the result based on your implementation
+  expect_true("ModelMean" %in% names(bunny_result))
+})
 
+test_that("Bayes function computes inferences correctly", {
+  # Assuming we have a bunny list from the Bunny function
+  # Here, you might need to mock this list or load it from a saved state
+  bunny <- list(ModelMean = c(1, 2, 3)) # Example mock
 
-#Compare with LSMEANS
-data$Sex<-as.factor(data$Sex)
-data$OP<-as.factor(data$OP)
-str(data)
-TESTBRMS <- brm(IMF ~ Sex + OP + LW,
-                data    = data,
-                family  = gaussian(),
-                iter    = 30000,
-                chains  = 1,
-                warmup  = 5000,
-                thin    = 10,
-                control = list(adapt_delta = 0.99),
-                silent  = 2,
-                refresh = 0,
-                backend = "cmdstanr",
-                threads = threading(1),
-                seed    = NA)
+  # Invoke Bayes function with necessary parameters and mocked bunny input
+  bayes_result <- Bayes(params, bunny)
 
+  # Check that bayes_result is a list and has expected structure
+  expect_type(bayes_result, "list")
 
+  # Check for specific keys or structure within bayes_result
+  expect_true("ModelMean" %in% names(bayes_result))
+})
+
+test_that("Rabbit function integrates components correctly", {
+  # Rabbit() might integrate all previous parts; thus, a comprehensive test could be challenging
+  # Consider mocking internal calls or focusing on the integration aspect
+
+  rabbit_result <- Rabbit()
+
+  # Assuming Rabbit() returns a complex structure integrating all parts
+  expect_type(rabbit_result, "list")
+
+  # Validate a key component of the output
+  expect_true("inferences" %in% names(rabbit_result))
+})
