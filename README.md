@@ -6,9 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-This is a teaching-oriented package for linear mixed models solved using
-Bayesian theory. The package includes visualization and characterization
-of marginal posterior distributions of the estimates.
+This is a teaching-oriented package for univariate linear mixed models
+solved using Bayesian theory. The package includes visualization and
+characterization of marginal posterior distributions of the estimates.
 
 ## Installation
 
@@ -43,7 +43,6 @@ library(RabbitR)
 #>          ------------
 #>   Welcome to RabbitR! Hop into the documentation with '?RabbitR'.
 #> 
-## basic example code
 ```
 
 In this example, we are going to use DataIMF from RabbitR package.The
@@ -52,8 +51,8 @@ generations of a divergent selection experiment for intramuscular fat in
 rabbits.The data are based on perirenal fat (PFat), intramuscular fat
 (IMF) and loin pH of rabbits belonging to both sexes (Sex), with an
 specific live weight (LW). The data have been taken at different seasons
-(AE, 2 levels) and rabbits were born at different parity orders (OP),
-and have a random litter effect (c).This is how DataIMF looks like:
+(AE, 2 levels) and rabbits were born at different parity orders (OP),and
+have a random litter effect (c).This is how DataIMF looks like:
 
 ``` r
 data(DataIMF)
@@ -77,10 +76,12 @@ categorized as Noise effects (AE, OP). Live Weight (LW) is a continuous
 trait and will thus be treated as a covariate. Effects from common
 litter will be modeled as random effects.
 
-The RabbitR package applies the same model framework to all traits:
+The RabbitR package supports univariate analysis, applying the same
+univariate model across multiple traits:
 
-IMF = m + Sex + AE + OP + b·LW + Rand(c) + e PFat = m + Sex + AE + OP +
-b·LW + Rand(c) + e
+IMF = m + Sex + AE + OP + b·LW + Rand(c) + e
+
+PFat = m + Sex + AE + OP + b·LW + Rand(c) + e
 
 To carry out our analysis, we’ll utilize the CreateParam, Bunny, and
 Bayes functions. This workflow covers creating a parameter file
@@ -450,3 +451,12 @@ inferences <- Bayes(
 ```
 
 <img src="man/figures/README-Bayes-1.png" width="100%" /><img src="man/figures/README-Bayes-2.png" width="100%" />
+
+This package makes extensive use of `MCMCglmm` R package. We acknowledge
+the work by Jarrod D. Hadfield in this area, as detailed in the
+following reference:
+
+Hadfield, J. D. (2010). MCMC methods for multi-response generalized
+linear mixed models: the MCMCglmm R package. *Journal of Statistical
+Software*, 33, 1-22. Available at [Journal of Statistical
+Software](https://www.jstatsoft.org/article/view/v033i02).

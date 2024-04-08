@@ -30,7 +30,6 @@
 #' - Depending on user input, it may generate warnings or stop execution if expected
 #' conditions are not met (e.g., file not found, unsupported file format).
 #'
-#' @export
 #' @importFrom utils read.csv
 #' @importFrom readxl read_excel
 #' @import dplyr
@@ -42,7 +41,7 @@
 #' # Example (single use)
 #' parameter_list <- iCreateParam()
 #'}
-
+#' @export
 iCreateParam <- function() {
 
 # Read the file

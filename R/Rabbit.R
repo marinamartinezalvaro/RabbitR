@@ -23,7 +23,6 @@
 #' @importFrom utils read.csv
 #' @import dplyr
 #' @importFrom ggdist stat_halfeye
-#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -31,7 +30,7 @@
 #' results <- Rabbit()
 #' results <- Rabbit(Chain=TRUE)
 #'}
-
+#' @export
 
 
 Rabbit<-function(Chain=FALSE) {

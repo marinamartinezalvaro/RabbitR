@@ -41,7 +41,6 @@
 #' - It reads the specified data file and may stop execution if the file does not exist
 #' or is in an unsupported format.
 #'
-#' @export
 #' @importFrom utils read.csv
 #' @importFrom readxl read_excel
 #' @import dplyr
@@ -82,9 +81,7 @@
 #'  lag = 20
 #')
 #'}
-
-
-
+#' @export
 CreateParam <- function(file.name,
                         na.codes=c("", "NA", "NULL"),
                         hTrait=NULL, pTrait=NULL,

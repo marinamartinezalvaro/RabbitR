@@ -15,7 +15,6 @@
 #'
 #' @return Returns a numeric vector containing calculated inferences from the posterior samples
 #' @importFrom HDInterval hdi
-#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -26,7 +25,7 @@
 #'  advanced_inf <- computeInferences(samples, askCompare="R", HPD=0.7, P0=TRUE, K=TRUE,
 #'  probK=0.8, PR=TRUE, R=1.1, PS=FALSE)
 #'}
-
+#' @export
 ComputeInferences <- function(samples, HPD=0.95, P0=TRUE, K=FALSE, probK=0.8, PR=FALSE, R=NULL, PS=FALSE, askCompare="D") {
 
   # Validation and Defaults

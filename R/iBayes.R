@@ -11,14 +11,13 @@
 #' @import ggplot2
 #' @import tidyr
 #' @importFrom ggdist stat_halfeye
-#' @export
 #'
 #' @examples
 #' \dontrun{
 #' # Example:
 #' bayes_results <- iBayes(params=my_param_file, bunny=bunny_results)
 #'}
-
+#' @export
 
 iBayes <- function(params, bunny) {
   cat(" iBayes Starting ... \n")

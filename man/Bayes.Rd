@@ -80,4 +80,5 @@ bayes_ratio_analysis <- Bayes(
  R = c(1.1), # Relevant value indicating a 10\% increase is significant
  plot = TRUE) # Visualizing the distribution of ratios and relevant thresholds
 }
+
 }

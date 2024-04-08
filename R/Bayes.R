@@ -24,7 +24,6 @@
 #' @import ggplot2
 #' @import tidyr
 #' @importFrom ggdist stat_halfeye
-#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -56,6 +55,8 @@
 #'  R = c(1.1), # Relevant value indicating a 10% increase is significant
 #'  plot = TRUE) # Visualizing the distribution of ratios and relevant thresholds
 #'}
+#'
+#' @export
 
 
 Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,

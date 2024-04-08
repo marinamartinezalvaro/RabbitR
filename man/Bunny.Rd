@@ -15,7 +15,7 @@ Bunny(params, Chain = FALSE)
 A comprehensive list detailing the outcomes of the mixed-effects model analysis. This includes posterior distribution samples for estimated parameters: model mean, residual variance, treatment means, contrasts between treatment levels, covariates and variance components of random effects.
 }
 \description{
-This function fits a mixed-effects model to the provided dataset based on specifications in a parameter file. It handles fixed effects, random effects, and interactions, performs convergence diagnosis, computes least squares means (LSMeans), and calculates contrasts between treatment levels as defined.
+This function fits a mixed-effects model to the provided dataset based on specifications in a parameter file. It handles fixed effects, random effects, and interactions, performs convergence diagnosis, computes least squares means (LSMeans), and calculates contrasts between treatment levels as defined. This function makes extensive use of MCMCglmm function \insertCite{Hadfield2010mcmc}{RabbitR}.
 }
 \examples{
 \dontrun{
@@ -24,4 +24,8 @@ results <- Bunny(params = my_param_file, Chain = TRUE)
 # To run the analysis without storing the chains
 results <- Bunny(params = my_param_file)
 }
+
+}
+\references{
+\insertAllCited{}
 }
