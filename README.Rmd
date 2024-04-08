@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of RabbitR is to ...
+This is a teaching-oriented package for linear mixed models solved using Bayesian theory. The package includes visualization and characterization of marginal posterior distributions of the estimates.
 
 ## Installation
 
@@ -38,18 +38,35 @@ library(RabbitR)
 ## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+In this example, we are going to use DataIMF from RabbitR package.The DataIMF dataset (502 observations across 8 variables) comes from three generations of a divergent selection experiment for
+intramuscular fat in rabbits.The data are based on perirenal fat (PFat), intramuscular fat (IMF) and loin pH of rabbits belonging to both sexes (Sex), with an specific live weight (LW). The data have been taken at different seasons (AE, 2 levels) and rabbits were born at different parity orders (OP),
+and have a random litter effect (c).This is how DataIMF looks like:
 
-```{r cars}
-summary(cars)
+```{r DataIMF}
+data(DataIMF)
+head(DataIMF)
+
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
 
-You can also embed plots, for example:
+We aim to explore the impact of Sex on IMF and PFat traits. Additionally, we recognize the potential influence of the season when data were collected, the parity order of the animals, their LW, and their common litter effects on IMF, which necessitates adjustment. In this context, Sex is considered our treatment of interest. Other fixed effects that require correction but are not our primary focus are categorized as Noise effects (AE, OP). Live Weight (LW) is a continuous trait and will thus be treated as a covariate. Effects from common litter will be modeled as random effects.
 
-```{r pressure, echo = FALSE}
-plot(pressure)
+The RabbitR package applies the same model framework to all traits:
+
+IMF = m + Sex + AE + OP + b·LW + Rand(c) + e
+PFat = m + Sex + AE + OP + b·LW + Rand(c) + e
+To facilitate this analysis, we will employ the CreateParam, Bunny and Bayes functions. This pipeline will go trough the process of running general linear models, generating posterior distributions, and computing inferences.
+
+```{r Inferences, echo = FALSE}
+
+CreateParam(
+  file.name = "~/Dropbox/Rpackages/RabbitR/DataIMF.csv",
+  hTrait = c("IMF", "PFat"),
+  hTreatment = "Sex",
+  hNoise = c("AE", "OP"),
+  hCov = c("LW"),
+  hRand = "c")
+
 ```
 
 In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
