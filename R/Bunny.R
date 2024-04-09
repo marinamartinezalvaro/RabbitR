@@ -14,6 +14,7 @@
 #' @import knitr
 #' @import openxlsx
 #' @import readxl
+#' @import tibble
 #' @examples
 #' \dontrun{
 #' # Example
@@ -31,42 +32,43 @@ Bunny <- function(params, Chain=FALSE) {
   cat(" Bunny Starting ... \n")
   # 1) Load the data
 
-  # Check if file.name is an object in the environment or a file
-  if (exists(params$file.name, where = .GlobalEnv) && tools::file_ext(params$file.name) == ""){
+  #Read the file
 
-    #For files already in the environment
+  # a) Check if file.name is an object in the environment in dataframe or tibble formats
+  if (exists(params$file.name, where = .GlobalEnv) && tools::file_ext(params$file.name) == "") {
     data <- get(params$file.name)
-    if (!inherits(data, "data.frame")) {
-      stop("Error: The object is not a data frame.")  }
 
-
-  #Check if needs to be imported
-  } else if (file.exists(params$file.name)) {
+    # Check if the object is a dataframe or a tibble
+    if (!(inherits(data, "data.frame") || inherits(data, "tbl_df"))) {
+      stop("Error: The object is not a data frame or tibble.")
+    }
+  } else if (file.exists(params$file.name)) { #b) If its not imported yet
 
     # Determine the file extension
     fileExtension <- tools::file_ext(params$file.name)
 
-    # Choose the reading function based on the file extension
-    switch(fileExtension,
-           csv = {
-             data <- read.csv(params$file.name, na.strings=params$na.codes)
-           },
-           xls = {
-             data <- read_excel(params$file.name)
-           },
-           xlsx = {
-             data <- read_excel(params$file.name)
-           },
-           txt = {
-             data <- read.table(file.name, na.strings=params$na.codes)
-           },
-           stop("Error: Unsupported file format")
+    # Read xlsx, xls and use the modified approach for .csv and .txt files to apcept all kind of delim
+    data <- switch(fileExtension,
+                   csv = {
+                     dt <- data.table::fread(params$file.name, na.strings = na.codes)
+                     as.data.frame(dt) # outputs a data.frame
+                   },
+                   xls = readxl::read_excel(params$file.name), # outputs a tibble
+                   xlsx = readxl::read_excel(params$file.name), # outputs a tibble
+                   txt = {
+                     dt <- data.table::fread(params$file.name, na.strings = na.codes)
+                     as.data.frame(dt)  # outputs a data.frame
+                   },
+                   stop("Error: Unsupported file format")
     )
 
     # Additional processing for Excel files if needed
     if (fileExtension %in% c("xls", "xlsx")) {
-      data[is.na(data)] <- NA  # Example: Converting custom NA codes if necessary
+      data[is.na(data)] <- NA  # Handling NA values
     }
+
+  } else { #c) If it`s something else`
+    stop("Error: The file does not exist.")
   }
 
   #Current version removes missing values in any of the right side of the model

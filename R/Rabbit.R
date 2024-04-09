@@ -21,6 +21,8 @@
 #' @import openxlsx
 #' @import readxl
 #' @importFrom utils read.csv
+#' @importFrom data.table fread
+#' @import tibble
 #' @import dplyr
 #' @importFrom ggdist stat_halfeye
 #'

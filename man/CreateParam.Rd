@@ -29,7 +29,7 @@ CreateParam(
 )
 }
 \arguments{
-\item{file.name}{String between commas " " specifying the name or name and path to the data file (if its not in the working directory), which must be in`.csv`,`.xlsx` or format `.txt`. If the datafile its preloaded in the environment, the name of the data can be input as a string "" without extension (It requires a data frame).}
+\item{file.name}{String between commas " " specifying the name or name and path to the data file (if its not in the working directory), which must be in`.csv`,`.xlsx` or format `.txt`. If the datafile its preloaded in the environment, the name of the data can be input as a string "" without extension.}
 
 \item{na.codes}{Character vector specifying how missing values are encoded in the data file. Default codes are `c("", "NA", "NULL")`.}
 

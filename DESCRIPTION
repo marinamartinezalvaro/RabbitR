@@ -24,6 +24,7 @@ Imports:
     openxlsx,
     readxl,
     utils,
+    data.table,
     dplyr,
     tibble,
     Rdpack

@@ -32,8 +32,10 @@
 #'
 #' @importFrom utils read.csv
 #' @importFrom readxl read_excel
-#' @import dplyr
+#' @importFrom data.table fread
 #' @import knitr
+#' @import dplyr
+#' @import tibble
 #' @examples
 #' \dontrun{
 #' # Run the function in an interactive R session
@@ -69,32 +71,26 @@ iCreateParam <- function() {
   } else {na.codes=c("", "NA", "NULL")}
 
   fileExtension <- tools::file_ext(file.name)
+
   # Choose the reading function based on the file extension
-  switch(fileExtension,
-         csv = {
-           data <- read.csv(file.name, na.strings=na.codes)
-         },
-         xls = {
-           data <- read_excel(file.name)
-         },
-         xlsx = {
-           data <- read_excel(file.name)
-         },
-         txt = {
-           data <- read.table(file.name, na.strings=na.codes)
-         },
-         stop("Error: Unsupported file format")
+  data <- switch(fileExtension,
+                 csv = {
+                   dt <- data.table::fread(file.name, na.strings = na.codes)
+                   as.data.frame(dt) # outputs a data.frame
+                 },
+                 xls = readxl::read_excel(file.name), # outputs a tibble
+                 xlsx = readxl::read_excel(file.name), # outputs a tibble
+                 txt = {
+                   dt <- data.table::fread(file.name, na.strings = na.codes)
+                   as.data.frame(dt)  # outputs a data.frame
+                 },
+                 stop("Error: Unsupported file format")
   )
 
   # Additional processing for Excel files if needed
   if (fileExtension %in% c("xls", "xlsx")) {
     data[is.na(data)] <- NA  # Example: Converting custom NA codes if necessary
   }
-
-  # if(sub(".*\\.", "", file.name) =="csv"){
-  #   if (Missing == "n"| Missing == "N"){data <- read.csv(file.name,header=T)} else {data <- read.csv(file.name,header=T, na.strings=na.codes)}}
-  # if(sub(".*\\.", "", file.name) =="xlsx"){
-  #   if (Missing == "n"| Missing == "N"){data <- data.frame(read_excel(file.name,col_names=T))} else {data <- data.frame(read_excel(file.name,col_names=T, na=na.codes))}}
 
   ri=nrow(data)
   cat("\033[32m", paste("The number of rows in the data file is", ri, sep = " "), "\033[0m\n")
@@ -206,12 +202,12 @@ iCreateParam <- function() {
           hTreatment[n] <- readline()
         }
         pTreatment[n] <- which(colnames(data)== hTreatment[n])
-        data[,pTreatment[n]]<-as.factor(data[,pTreatment[n]])
+        data[,pTreatment[n]]<-as.factor(data[[pTreatment[n]]])
         # Check if there are missing values in the treatment column
-        if (any(is.na(data[, pTreatment[n]]))) {
+        if (any(is.na(data[[pTreatment[n]]]))) {
           stop(sprintf("Error: Missing values found in treatment effect '%s'. Missing values in treatment effects are not supported.", hTreatment[n]))
         }
-        nlevels_Treatment[n] <-nlevels(data[,pTreatment[n]])
+        nlevels_Treatment[n] <-nlevels(data[[pTreatment[n]]])
         cat("\033[32m", paste("The number of levels read in Treatment ", hTreatment[n], "are: ",nlevels_Treatment[n],sep = " "), "\033[0m\n")
       }
 
@@ -253,12 +249,12 @@ iCreateParam <- function() {
           hNoise[n] <-readline()
         }
         pNoise[n] <- which(colnames(data)== hNoise[n])
-        data[,pNoise[n]]<-as.factor(data[,pNoise[n]])
+        data[,pNoise[n]]<-as.factor(data[[pNoise[n]]])
         # Check if there are missing values in the noise column
-        if (any(is.na(data[, pNoise[n]]))) {
+        if (any(is.na(data[[pNoise[n]]]))) {
           stop(sprintf("Error: Missing values found in noise effect '%s'. Missing values in noise effects are not supported.", hNoise[n]))
         }
-        nlevels_Noise[n] <-nlevels(data[,pNoise[n]])
+        nlevels_Noise[n] <-nlevels(data[[pNoise[n]]])
         cat("\033[32m", paste("The number of levels read in Noise ", hNoise[n],"are: ",nlevels_Noise[n], sep = " "), "\033[0m\n")
       }
 
@@ -404,7 +400,7 @@ iCreateParam <- function() {
             #     typeInter[n,2] <- "F"} else {typeInter[n,2] <- "C"}
             # }
 
-            nlevels_Interaction[n]<-nlevels(as.factor(data[,pInter[n,1]]))*nlevels(as.factor(data[,pInter[n,2]]))
+            nlevels_Interaction[n]<-nlevels(as.factor(data[[pInter[n,1]]]))*nlevels(as.factor(data[[pInter[n,2]]]))
             cat("\033[32m", paste("The number of levels for Interaction ", n," is: ", nlevels_Interaction[n], sep = " "), "\033[0m\n")
             cat("\n")
 

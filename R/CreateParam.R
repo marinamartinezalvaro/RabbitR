@@ -9,7 +9,7 @@
 #' It supports defining various model components, including traits, treatments,
 #' noise effects, covariates, interactions, and random effects.
 #'
-#' @param file.name String between commas " " specifying the name or name and path to the data file (if its not in the working directory), which must be in`.csv`,`.xlsx` or format `.txt`. If the datafile its preloaded in the environment, the name of the data can be input as a string "" without extension (It requires a data frame).
+#' @param file.name String between commas " " specifying the name or name and path to the data file (if its not in the working directory), which must be in`.csv`,`.xlsx` or format `.txt`. If the datafile its preloaded in the environment, the name of the data can be input as a string "" without extension.
 #' @param na.codes Character vector specifying how missing values are encoded in the data file. Default codes are `c("", "NA", "NULL")`.
 #' @param hTrait Vector specifying the names of the traits. Users can specify traits using either hTrait, pTrait or both arguments.
 #' @param pTrait Vector specifying the column positions in the data file of the traits. Users can specify traits using either hTrait, pTrait or both arguments.
@@ -43,8 +43,10 @@
 #'
 #' @importFrom utils read.csv
 #' @importFrom readxl read_excel
-#' @import dplyr
+#' @importFrom data.table fread
 #' @import knitr
+#' @import dplyr
+#' @import tibble
 #' @examples
 #' \dontrun{
 #'# Example usage :
@@ -103,43 +105,47 @@ CreateParam <- function(file.name,
       param_list[["na.codes"]] <- na.codes
       }
 
-      # Check if file.name is an object in the environment or a file
-      if (exists(file.name, where = .GlobalEnv) && tools::file_ext(file.name) == ""){
+      #Read the file
 
-      #For files already in the environment
+      # a) Check if file.name is an object in the environment in dataframe or tibble formats
+      if (exists(file.name, where = .GlobalEnv) && tools::file_ext(file.name) == "") {
         data <- get(file.name)
-        if (!inherits(data, "data.frame")) {
-          stop("Error: The object is not a data frame.")  }
-      } else if (file.exists(file.name)) {
 
-      # Determine the file extension
-      fileExtension <- tools::file_ext(file.name)
+        # Check if the object is a dataframe or a tibble
+        if (!(inherits(data, "data.frame") || inherits(data, "tbl_df"))) {
+          stop("Error: The object is not a data frame or tibble.")
+        }
+      } else if (file.exists(file.name)) { #b) If its not imported yet
 
-      # Choose the reading function based on the file extension
-      switch(fileExtension,
-             csv = {
-               data <- read.csv(file.name, na.strings=na.codes)
-             },
-             xls = {
-               data <- read_excel(file.name)
-             },
-             xlsx = {
-               data <- read_excel(file.name)
-             },
-             txt = {
-               data <- read.table(file.name, na.strings=na.codes)
-             },
-             stop("Error: Unsupported file format")
-      )
+        # Determine the file extension
+        fileExtension <- tools::file_ext(file.name)
 
-      # Additional processing for Excel files if needed
-      if (fileExtension %in% c("xls", "xlsx")) {
-         data[is.na(data)] <- NA  # Example: Converting custom NA codes if necessary
-       }
+        # Read xlsx, xls and use the modified approach for .csv and .txt files to apcept all kind of delim
+        data <- switch(fileExtension,
+                       csv = {
+                         dt <- data.table::fread(file.name, na.strings = na.codes)
+                         as.data.frame(dt) # outputs a data.frame
+                       },
+                       xls = readxl::read_excel(file.name), # outputs a tibble
+                       xlsx = readxl::read_excel(file.name), # outputs a tibble
+                       txt = {
+                         dt <- data.table::fread(file.name, na.strings = na.codes)
+                         as.data.frame(dt)  # outputs a data.frame
+                       },
+                       stop("Error: Unsupported file format")
+        )
 
-    } else {stop("Error: The file does not exist.")}
+        # Additional processing for Excel files if needed
+        if (fileExtension %in% c("xls", "xlsx")) {
+          data[is.na(data)] <- NA  # Handling NA values
+        }
 
-#End for new files
+      } else { #c) If it`s something else`
+        stop("Error: The file does not exist.")
+      }
+
+      #Check format
+      str(data)
 
       # Display number of rows and Descriptive summary
       ri=nrow(data)
@@ -254,12 +260,12 @@ CreateParam <- function(file.name,
         for (n in seq_along(pTreatment)) {
 
           # Check if there are missing values in the treatment column
-          if (any(is.na(data[, pTreatment[n]]))) {
+          if (any(is.na(data[[pTreatment[n]]]))) {
             stop(sprintf("Error: Missing values found in treatment effect '%s'. Missing values in treatment effects are not supported.", hTreatment[n]))
           }
 
-          data[, pTreatment[n]] <- as.factor(data[, pTreatment[n]])
-          nlevels_Treatment[n] <- nlevels(data[, pTreatment[n]])
+          data[, pTreatment[n]] <- as.factor(data[[pTreatment[n]]])
+          nlevels_Treatment[n] <- nlevels(data[[pTreatment[n]]])
         }
         param_list[["nlevels_Treatment"]] <- nlevels_Treatment
         cat(paste0("The number of levels read in Treatments are: ", paste(nlevels_Treatment, collapse=", "), "."))
@@ -308,12 +314,12 @@ CreateParam <- function(file.name,
         for (n in seq_along(pNoise)) {
 
           # Check if there are missing values in the noise column
-          if (any(is.na(data[, pNoise[n]]))) {
+          if (any(is.na(data[[pNoise[n]]]))) {
             stop(sprintf("Error: Missing values found in Noise effect '%s'. Missing values in noise effects are not supported.", hNoise[n]))
           }
 
-          data[, pNoise[n]] <- as.factor(data[, pNoise[n]])
-          nlevels_Noise[n] <- nlevels(data[, pNoise[n]])
+          data[, pNoise[n]] <- as.factor(data[[pNoise[n]]])
+          nlevels_Noise[n] <- nlevels(data[[pNoise[n]]])
         }
         param_list[["nlevels_Noise"]] <- nlevels_Noise
         cat(paste0("The number of levels read in Noise are: ", paste(nlevels_Noise, collapse=", "), "."))
@@ -411,7 +417,7 @@ CreateParam <- function(file.name,
 
         # Common operations for both hInter and pInter
         for (n in 1:nInter) {
-          nlevels_Interaction[n] <- nlevels(as.factor(data[,pInter[n,1]]))*nlevels(as.factor(data[,pInter[n,2]]))
+          nlevels_Interaction[n] <- nlevels(as.factor(data[[pInter[n,1]]])) * nlevels(as.factor(data[[pInter[n,2]]]))
         }
         param_list[["nlevels_Interaction"]] <- nlevels_Interaction
         cat(paste0("The number of levels of Interaction ",n, " is ", paste(nlevels_Interaction[n], collapse=", "), "."))
