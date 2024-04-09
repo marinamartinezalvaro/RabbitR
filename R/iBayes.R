@@ -70,8 +70,8 @@ iBayes <- function(params, bunny) {
     stop("When PR is TRUE, R must be a vector with one entry per trait.")
   }
 
-  # Call the bayes function with the collected inputs
-  results <- bayes(params, bunny, HPD, P0, K, probK, PR, R, PS, SaveTable, plot)
+  # Call the Bayes function with the collected inputs
+  results <- Bayes(params, bunny, HPD, P0, K, probK, PR, R, PS, SaveTable, plot)
 
   return(results)
 }
