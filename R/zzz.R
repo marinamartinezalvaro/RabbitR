@@ -14,6 +14,6 @@
          ------------
         |   RabbitR  |
          ------------
-  Welcome to RabbitR! Hop into the documentation with '?RabbitR'.
+  Welcome to RabbitR! Hop into the documentation with '??RabbitR'.
   ")
 }
