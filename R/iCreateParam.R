@@ -102,12 +102,13 @@ iCreateParam <- function() {
   # Define the model
 
   # 1)  Traits (required)
+    cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
+    cat("\n")
     cat(sprintf("%s ", "\033[32mEnter the total number of traits \033[0m"))
     nTrait <- as.numeric(readline())
     hTrait<-NULL
     pTrait<-NULL
-    cat("\n")
-    cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
+
    # if (nTrait>1){ #If more than one trait
       for(n in 1:nTrait){
         cat("\033[32m", paste("Enter the name of the Trait ", n, sep = " "), "\033[0m\n")
@@ -186,6 +187,8 @@ iCreateParam <- function() {
     cat("\n")
 
     # 2) Treatment effects (optional)
+    cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
+    cat("\n")
     cat(sprintf("%s ", "\033[32mEnter the number of treatments \033[0m"))
     nTreatment  <- as.numeric(readline())
     if(nTreatment != 0){
@@ -193,7 +196,6 @@ iCreateParam <- function() {
       pTreatment<-NULL
       nlevels_Treatment<-NULL
       cat("\n")
-      cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
       for(n in 1:nTreatment){
       cat("\033[32m", paste("Enter the name of Treatment ", n, sep = " "), "\033[0m\n")
       hTreatment[n] <- readline()
@@ -233,13 +235,14 @@ iCreateParam <- function() {
 
 
     # 3) Noise effects (optional)
+    cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
+    cat("\n")
     cat(sprintf("%s ", "\033[32mEnter the number of noise effects \033[0m"))
     nNoise      <- as.numeric(readline())
     if(nNoise != 0){
       hNoise<-NULL
       pNoise<-NULL
       nlevels_Noise<-NULL
-      cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
       for(n in 1:nNoise){
         cat("\033[32m", paste("Enter the name of the Noise effect ", n, sep = " "), "\033[0m\n")
         hNoise[n] <-readline()
@@ -298,13 +301,14 @@ iCreateParam <- function() {
       cat("\n")
 
        # 4) Covariates (optional)
+      cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
+      cat("\n")
       cat(sprintf("%s ", "\033[32mEnter the number of covariates (0,1,2,...) \033[0m"))
       nCov <- as.numeric(readline())
         if(nCov != 0){
           hCov<-NULL
           pCov<-NULL
           cat("\n")
-          cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
           for (n in 1:nCov){
             cat("\033[32m", paste("Enter the name of Covariate ", n, sep = " "), "\033[0m\n")
             hCov[n] <-  readline()
@@ -421,12 +425,14 @@ iCreateParam <- function() {
             }
 
         # 6) Random Effects (optional)
+        cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
+        cat("\n")
         cat(sprintf("%s ", "\033[32mEnter the number of random effects \033[0m"))
         nRand <- as.numeric(readline())
         if(nRand != 0){
           hRand<-NULL
           pRand<-NULL
-          cat("\033[32m", "Help: the header of the datafile is", paste(colnames(data), collapse = ", "), "\033[0m\n")
+          cat("\n")
           for (n in 1:nRand){
             cat("\033[32m", paste("Enter the name of the random effect ", n, sep = " "), "\033[0m\n")
             hRand[n] <- readline()

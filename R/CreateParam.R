@@ -110,8 +110,7 @@ CreateParam <- function(file.name,
         data <- get(file.name)
         if (!inherits(data, "data.frame")) {
           stop("Error: The object is not a data frame.")  }
-      }
-      else if (file.exists(file.name)) {
+      } else if (file.exists(file.name)) {
 
       # Determine the file extension
       fileExtension <- tools::file_ext(file.name)
@@ -138,8 +137,7 @@ CreateParam <- function(file.name,
          data[is.na(data)] <- NA  # Example: Converting custom NA codes if necessary
        }
 
-    }
-      else {stop("Error: The file does not exist.")}
+    } else {stop("Error: The file does not exist.")}
 
 #End for new files
 

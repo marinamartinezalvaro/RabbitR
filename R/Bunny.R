@@ -38,10 +38,10 @@ Bunny <- function(params, Chain=FALSE) {
     data <- get(params$file.name)
     if (!inherits(data, "data.frame")) {
       stop("Error: The object is not a data frame.")  }
-  }
+
 
   #Check if needs to be imported
-  else if (file.exists(params$file.name)) {
+  } else if (file.exists(params$file.name)) {
 
     # Determine the file extension
     fileExtension <- tools::file_ext(params$file.name)
@@ -184,7 +184,8 @@ Bunny <- function(params, Chain=FALSE) {
         burnin = params$burnin,
         thin = params$lag,
         verbose = FALSE, #if TRUE MH diagnostics are printed to screen
-        DIC = TRUE
+        DIC = TRUE,
+        singular.ok=TRUE
       )
 
       # Add the random argument only if nRandom is different from 0
@@ -314,8 +315,8 @@ Bunny <- function(params, Chain=FALSE) {
         # Generate levels for treatments if they exist (make sure they are factors)
         if (length(params$hTreatment) > 0) {
           treatmentsLevels <- lapply(params$hTreatment, function(tr) {
-            factor(seq_len(params$nlevels_Treatment[params$hTreatment == tr]),
-                   levels = seq_len(params$nlevels_Treatment[params$hTreatment == tr]))
+            levels_data <- levels(data[[tr]])
+            factor(levels_data, levels = levels_data)
           })
           names(treatmentsLevels) <- params$hTreatment
           categoricalAndCovariateVarsLevels <- c(categoricalAndCovariateVarsLevels, treatmentsLevels)
@@ -324,8 +325,8 @@ Bunny <- function(params, Chain=FALSE) {
         # Generate levels for noise if they exist (make sue thay are factors)
         if (length(params$hNoise) > 0) {
           noiseLevels <- lapply(params$hNoise, function(noise) {
-            factor(seq_len(params$nlevels_Noise[params$hNoise == noise]),
-                   levels = seq_len(params$nlevels_Noise[params$hNoise == noise]))
+            levels_data <- levels(data[[noise]])
+            factor(levels_data, levels = levels_data)
           })
           names(noiseLevels) <- params$hNoise
           categoricalAndCovariateVarsLevels <- c(categoricalAndCovariateVarsLevels, noiseLevels)
