@@ -466,8 +466,8 @@ Bunny <- function(params, Chain=FALSE) {
       # Initialize an empty list for this treatment within contrasts_list
       contrasts_list[[treatment]] <- list()
 
-      # Get the unique levels for the current treatment
-      levels <- seq_len(params$nlevels_Treatment[params$hTreatment == treatment])
+      # Get levels from data
+      levels <- levels(data[[treatment]])
 
       # Compute pairwise combinations of levels
       level_combinations <- combn(levels, 2, simplify = FALSE)
