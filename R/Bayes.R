@@ -23,6 +23,7 @@
 #' @importFrom HDInterval hdi
 #' @import ggplot2
 #' @import tidyr
+#' @import openxlsx
 #' @importFrom ggdist stat_halfeye
 #'
 #' @examples
@@ -62,7 +63,7 @@
 Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
                   K=FALSE, probK=0.80,
                   PR=FALSE, R=FALSE,PS=FALSE,
-                  SaveTable=FALSE, plot=FALSE){
+                  SaveTable=TRUE, plot=FALSE){
 
   cat(" Bayes Starting ... \n")
   # Ensure that R has an entry for each trait if PR or PS are TRUE
@@ -174,7 +175,7 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
   } #End of the loop within each trait
 
 
-  #2) If SaveTable=T out_bayes should be writen down in a csv file
+  #2) If SaveTable=T (Default) out_bayes should be writen down in a csv file
 
   if (SaveTable) {
         # Helper function to recursively extract numeric vectors and their paths
@@ -224,11 +225,14 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
 
           # Combine rows into a single dataframe
           df <- do.call(rbind, standardized_rows)
-          # Optionally, set row names
+          colnames(df)[4]<-"HPD_lower"
+          colnames(df)[5]<-"HPD_upper"
+          # set row names
           rownames(df) <- names(standardized_rows)
         }
 
-        write.csv(df, file="Inferences_PosteriorChains.csv")
+        openxlsx::write.xlsx(df, "Results.xlsx", overwrite = TRUE, rowNames = TRUE)
+        #write.csv(df, file="Results.csv")
       }
 
   #3) If plot=T make plots of th contrasts

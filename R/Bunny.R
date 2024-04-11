@@ -50,13 +50,13 @@ Bunny <- function(params, Chain=FALSE) {
     # Read xlsx, xls and use the modified approach for .csv and .txt files to apcept all kind of delim
     data <- switch(fileExtension,
                    csv = {
-                     dt <- data.table::fread(params$file.name, na.strings = na.codes)
+                     dt <- data.table::fread(params$file.name, na.strings = params$na.codes)
                      as.data.frame(dt) # outputs a data.frame
                    },
                    xls = readxl::read_excel(params$file.name), # outputs a tibble
                    xlsx = readxl::read_excel(params$file.name), # outputs a tibble
                    txt = {
-                     dt <- data.table::fread(params$file.name, na.strings = na.codes)
+                     dt <- data.table::fread(params$file.name, na.strings = params$na.codes)
                      as.data.frame(dt)  # outputs a data.frame
                    },
                    stop("Error: Unsupported file format")
@@ -570,11 +570,6 @@ Bunny <- function(params, Chain=FALSE) {
       writeData(OUT, sheet = "RandomVariance", x = mcmcVar[, -index, drop = FALSE], colNames = TRUE, rowNames = FALSE)
     }
 
-    if (length(params$hCov) > 0) {
-      addWorksheet(OUT, "Covariate")
-      writeData(OUT, sheet = "Covariate", x = covariates_samples, colNames = TRUE, rowNames = FALSE)
-    }
-
     if (length(params$hTreatment) > 0) {
 
       addWorksheet(OUT, "Means")
@@ -613,6 +608,11 @@ Bunny <- function(params, Chain=FALSE) {
         contrasts_df <- cbind(contrasts_df, temp_df)
       }
       writeData(OUT, sheet = "Contrasts", x = contrasts_df, colNames = TRUE, rowNames = FALSE)
+    }
+
+    if (length(params$hCov) > 0) {
+      addWorksheet(OUT, "Covariate")
+      writeData(OUT, sheet = "Covariate", x = covariates_samples, colNames = TRUE, rowNames = FALSE)
     }
 
     # Construct the file name with the trait name

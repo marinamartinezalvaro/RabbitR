@@ -14,7 +14,7 @@ Bayes(
   PR = FALSE,
   R = FALSE,
   PS = FALSE,
-  SaveTable = FALSE,
+  SaveTable = TRUE,
   plot = FALSE
 )
 }

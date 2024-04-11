@@ -338,13 +338,13 @@ iCreateParam <- function() {
         } #End Cov
 
         # 5) Interactions (optional)
-        cat(sprintf("%s ", "\033[32mDo you want to consider any interactions of order 2  (Enter Yes=Y or No=N)  ? \033[0m"))
+        cat(sprintf("%s ", "\033[32mDo you want to consider any interactions of order 2 ? (Enter Yes=Y or No=N)  \033[0m"))
         askInterFix <- readline()
 
         while((askInterFix!= "y") && (askInterFix!= "n") && (askInterFix!= "Y") && (askInterFix!= "N") ==TRUE){
           cat(sprintf("%s ", "\033[32mWeird response, try again! \033[0m"))
           cat("\n")
-          cat(sprintf("%s ", "\033[32mDo you want to consider any interactions of order 2  (Enter Yes=Y or No=N)  ? \033[0m"))
+          cat(sprintf("%s ", "\033[32mDo you want to consider any interactions of order 2 ?  (Enter Yes=Y or No=N) \033[0m"))
           askInterFix <- readline()}
 
         if ((askInterFix=="Y") | (askInterFix == "y")){
@@ -405,7 +405,7 @@ iCreateParam <- function() {
             cat("\n")
 
             #Ask whether Interaction should be consider as noise or as treatment
-            cat(sprintf("%s ", "\033[32mDo you want to consider this interaction as Treatment or Noise (Enter Treatment=T or Noise=N) ? \033[0m"))
+            cat(sprintf("%s ", "\033[32mDo you want to consider this interaction as Treatment or Noise ? (Enter Treatment=T or Noise=N) \033[0m"))
             ShowInter[n] <-readline()
 
           }}else{
@@ -499,12 +499,12 @@ iCreateParam <- function() {
         cat("\n")
 
         # Define MCMC features
-          cat(sprintf("%s ", "\033[32mDo you want to establish the MCMC characteristics  (Enter Yes=Y or No=N) ? \033[0m"))
+          cat(sprintf("%s ", "\033[32mDo you want to establish the MCMC characteristics ? (Enter Yes=Y or No=N) \033[0m"))
           askMCMC     <- readline()
           while((askMCMC!= "y") && (askMCMC!= "Y") && (askMCMC!= "n") && (askMCMC!= "N") ==TRUE){
             cat(sprintf("%s ", "\033[32mWeird response, try again! \033[0m"))
             cat("\n")
-            cat(sprintf("%s ", "\033[32mDo you want to establish the MCMC characteristics  (Enter Yes=Y or No=N) ? \033[0m"))
+            cat(sprintf("%s ", "\033[32mDo you want to establish the MCMC characteristics ? (Enter Yes=Y or No=N) \033[0m"))
             askMCMC     <- readline()
             }
 

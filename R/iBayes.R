@@ -10,6 +10,7 @@
 #' @importFrom HDInterval hdi
 #' @import ggplot2
 #' @import tidyr
+#' @import openxlsx
 #' @importFrom ggdist stat_halfeye
 #'
 #' @examples
@@ -31,7 +32,7 @@ iBayes <- function(params, bunny) {
   # P0 <- ifelse(tolower(P0) == "n", FALSE, TRUE)  # Default to TRUE if input is not "F"
   P0<-TRUE
 
-  cat(sprintf("%s", "\033[32mDo you want to calculate a guaranteed value (K) for the posterior distribution with a given probability? (Enter Yes=Y or No=N): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to calculate a guaranteed value (K) with a given probability? (Enter Yes=Y or No=N): \033[0m"))
   K <- readline()
   K <- tolower(K) == "y"
 
@@ -43,16 +44,16 @@ iBayes <- function(params, bunny) {
     probK <- NA
   }
 
-  cat(sprintf("%s", "\033[32mDo you want to calculate probability of contrasts being greater than a relevant value (PR) ? (Enter Yes=Y or No=N): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to calculate probability (PR) of contrasts being greater than a relevant value (R) ? (Enter Yes=Y or No=N): \033[0m"))
   PR <- readline()
   PR <- tolower(PR) == "y"
 
-  cat(sprintf("%s", "\033[32mDo you want to calculate probability of similarity [-R, R] of contrasts (PS)? (Enter Yes=Y or No=N): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to calculate probability of similarity of contrasts (PS)? (Enter Yes=Y or No=N): \033[0m"))
   PS <- readline()
   PS <- tolower(PS) == "y"
 
   if(PR || PS) {
-    cat(sprintf("%s", "\033[32mEnter the R value(s), separated by commas if multiple traits (e.g., 0.1,0.2): \033[0m"))
+    cat(sprintf("%s", "\033[32mEnter the relevant value(s) (R), separated by commas if multiple traits (e.g., 0.1,0.2): \033[0m"))
     R_input <- readline()
     R <- as.numeric(unlist(strsplit(R_input, ",")))
   } else {
