@@ -2,8 +2,12 @@ Package: RabbitR
 Type: Package
 Title: User fiendly linear mixed model analysis solved with Bayesian
 Version: 0.1.0
-Authors@R: person("Marina", "Martinez-Alvaro", email = "mamaral9@upv.es",
-                  role = c("aut", "cre"))
+Authors@R: c(person("Marina", "Martinez-Alvaro", email = "mamaral9@upv.es",
+                  role = c("aut", "cre"),comment = c(ORCID = "0000-0003-2295-5839")),
+           person("Cristina", "Casto-Rebollo", role = "ctb", 
+                  comment = c(ORCID = "0000-0003-4646-345X")),
+           person("Agustin", "Blasco", role = "ctb", 
+                  comment = c(ORCID = "0000-0003-3558-0810")))
 Maintainer: The package maintainer <mamaral9@upv.es>
 Description: This is a teaching-oriented package for linear mixed models solved using Bayesian theory.
     The package includes visualization and characterization of marginal posterior distributions of the estimates.
