@@ -10,7 +10,7 @@
 #' noise effects, covariates, interactions, and random effects.
 #'
 #' @param file.name String between commas " " specifying the name or name and path to the data file (if its not in the working directory), which must be in`.csv`,`.xlsx` or format `.txt`. If the datafile its preloaded in the environment, the name of the data can be input as a string "" without extension.
-#' @param na.codes Character vector specifying how missing values are encoded in the data file. Default codes are c("", "NA", "NULL").
+#' @param na.codes Character vector specifying how missing values are encoded in the data file. Different values in the same file are allowed. Default codes are c("", "NA", "NULL").
 #' @param hTrait Vector specifying the names of the traits. Users can specify traits using either hTrait, pTrait or both arguments.
 #' @param pTrait Vector specifying the column positions in the data file of the traits. Users can specify traits using either hTrait, pTrait or both arguments.
 #' @param hTreatment Vector specifying the names of the treatment effects. Users can specify treatment effects using either hTreatment, pTreatment or both arguments.
@@ -135,7 +135,7 @@ CreateParam <- function(file.name,
                        stop("Error: Unsupported file format")
         )
 
-        # Additional processing for Excel files if needed
+        # Additional processing for Excel files if needed as read_Excel handles missings automatically with NA and  "" but not with other na.strings
         if (fileExtension %in% c("xls", "xlsx")) {
           data[is.na(data)] <- NA  # Handling NA values
         }
@@ -144,7 +144,11 @@ CreateParam <- function(file.name,
         stop("Error: The file does not exist.")
       }
 
-      #Check format
+      # Re-assure missing values are well coded
+      data <- data %>%
+        mutate(across(everything(), ~ replace(., . %in% na.codes, NA)))
+
+      #Check format and re-asure missing values are well coded
       str(data)
 
       # Display number of rows and Descriptive summary

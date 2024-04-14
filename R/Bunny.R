@@ -71,6 +71,10 @@ Bunny <- function(params, Chain=FALSE) {
     stop("Error: The file does not exist.")
   }
 
+  # Re-assure missing values are well coded
+  data <- data %>%
+    mutate(across(everything(), ~ replace(., . %in% params$na.codes, NA)))
+
   #Current version removes missing values in any of the right side of the model
   required_columns <-  unique(unlist(params[c("hTreatment", "hNoise", "hCov", "hInter", "hRand")]))
   # Delete rows with missing values in required columns

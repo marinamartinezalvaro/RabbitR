@@ -92,6 +92,10 @@ iCreateParam <- function() {
     data[is.na(data)] <- NA  # Example: Converting custom NA codes if necessary
   }
 
+  # Re-assure missing values are well coded
+  data <- data %>%
+    mutate(across(everything(), ~ replace(., . %in% na.codes, NA)))
+
   ri=nrow(data)
   cat("\033[32m", paste("The number of rows in the data file is", ri, sep = " "), "\033[0m\n")
 
