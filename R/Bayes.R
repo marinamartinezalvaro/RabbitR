@@ -150,7 +150,9 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
       if (comp %in% c("Cov", "RandomVariances")) { # For Cov and RandomVariances which are not deeply nested
         for (col in names(bunny[[trait]][[comp]])) {
             samples <- as.numeric(bunny[[trait]][[comp]][col][, 1])
-            compResults[[col]] <- ComputeInferences(samples, askCompare=params$askCompare, HPD, P0, K, probK, PR=FALSE, R=NULL, PS=FALSE)
+            #Do not compute P0 if its a Variance
+            p0_value <- ifelse(comp == "RandomVariances", FALSE, P0)
+            compResults[[col]] <- ComputeInferences(samples, askCompare=params$askCompare, HPD, P0=p0_value, K, probK, PR=FALSE, R=NULL, PS=FALSE)
             m<-compResults[[col]]
             cat(paste(comp, col, "\n"))
             cat("Median: ", m["Median"], "\n")

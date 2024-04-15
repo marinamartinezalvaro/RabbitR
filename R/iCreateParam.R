@@ -324,7 +324,7 @@ iCreateParam <- function() {
         # Display descriptive stats of covariates
         if(nCov != 0){
           cat("\n")
-          cat("\033[32m", paste("See below the summary statitics of covariates: ", hCov, sep = " "), "\033[0m\n")
+          cat("\033[32m", paste("See below the summary statistics of covariates: ", hCov, sep = " "), "\033[0m\n")
           cat("\n")
           summary_stats <- sapply(data[, pCov, drop=FALSE], customSummary)
           summary_df <- as.data.frame(t(summary_stats))
