@@ -15,7 +15,7 @@
 #' @param probK A numeric value between 0 and 1 specifying the probability threshold for computing the guaranteed value when `K` is `TRUE`. If `K` is `TRUE` and `probK` is not specified, a default value of 0.80 is used.
 #' @param PR A logical (default is `FALSE`). If `TRUE`, computes the probability that the posterior distribution is greater than a relevant value (`R`) if the median is positive, or less than `R` if the median is negative. Applies to contrasts only.
 #' @param R A numeric vector containing a relevant value for each trait. If `PR` is `TRUE`, this argument is mandatory. For contrasts between treatments expressed as ratios, `R` should be considered in percentage (e.g., 1.1 for a 10 per cent increase). Suggested values are one-third of the standard deviation of the trait for differences, and 10 per cent for ratios.
-#' @param PS A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R` (or between `1/R` and `R` if it's a ratio).
+#' @param PS A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R` (or between `1/R` and `R` if it's a ratio). Applies to contrasts only.
 #' @param SaveTable  A logical flag (default is `TRUE`). If `TRUE`, the inferences of posterior distributions printed to the console are also saved in a CSV file.
 #' @param plot A logical flag (default is `FALSE`). If `TRUE`, generates and saves plots of posterior distributions for contrasts in .tiff format, highlighting `P0` and `PR` values if applicable.
 #'
@@ -127,7 +127,9 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
           for (subElem in names(bunny[[trait]][[comp]][[elem]])) {
             samples <- as.numeric(bunny[[trait]][[comp]][[elem]][[subElem]])
             if (PR||PS) {r<-R[which(names(bunny) == trait)]}
-            elemResults[[subElem]] <- ComputeInferences(samples, askCompare=params$askCompare, HPD, P0, K, probK, PR, R=r, PS)
+            pR_value <- ifelse(comp == "treatMeans", FALSE, PR)
+            pS_value <- ifelse(comp == "treatMeans", FALSE, PS)
+            elemResults[[subElem]] <- ComputeInferences(samples, askCompare=params$askCompare, HPD, P0, K, probK, PR=pR_value, R=r, PS=pS_value)
             cat(paste(elem, subElem, "\n"))
             m<-elemResults[[subElem]]
             cat("Median: ", m["Median"], "\n")
