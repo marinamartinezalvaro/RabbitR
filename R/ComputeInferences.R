@@ -59,7 +59,7 @@ ComputeInferences <- function(samples, HPD=0.95, P0=TRUE, K=FALSE, probK=0.8, PR
 
   #Calculate Guaranteed Value only if have the same sign as the median
   if (K) {
-    quantileValue <- quantile(samples, probs = c(probK, 1 - probK))
+    quantileValue <- quantile(samples, probs = c(1 - probK, probK))
     if (est > 0) {
       kGuaranteed <- ifelse(quantileValue[1] > 0, quantileValue[1], NA)  # For positive estimates, use lower quantile if positive
     } else {
