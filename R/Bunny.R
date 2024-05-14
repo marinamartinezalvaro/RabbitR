@@ -619,6 +619,7 @@ Bunny <- function(params, Chain=FALSE) {
     }
 
   } #End of the Loop for each trait
+  cat("\n")
   cat("---------------------------------------------------\n")
   cat("\nBunny finished. The posterior chains of your estimates are ready :) \n")
   cat("---------------------------------------------------\n")
