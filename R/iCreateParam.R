@@ -361,10 +361,11 @@ iCreateParam <- function() {
           ShowInter<-NULL
 
           cat("\n")
-          cat(sprintf("%s ", "\033[32mFor this package version, interactions can be considered only between fixed effects already declared as noise or treatments \033[0m"))
+          cat(sprintf("%s ", "\033[32mInteractions can be considered only between fixed effects already declared as noise or treatments \033[0m"))
           cat("\n")
           for (n in 1:nInter){
             cat("\033[32m", paste("Let's define the Interaction ", n, sep = " "), "\033[0m\n")
+
             #First element
             cat("\033[32m", paste("Enter the name of the first effect to be considered in the interaction ", n, sep = " "), "\033[0m\n")
             hInter[n,1] <-readline()
@@ -376,13 +377,6 @@ iCreateParam <- function() {
             }
             pInter[n,1] <-which(colnames(data)== hInter[n,1])
 
-            # #If the element is still not used as Treatment, covariate or noise, ask which type of element it is
-            # if (!(hInter[n,1] %in% c(hCov, hTreatment, hNoise))) {
-            #   typeInter[n,1] <-readline(sprintf("%s\n",green(paste("Which type of variable is this effect (Enter Factor=F or Covariate=C) ? "))))
-            # } else {
-            #   if (hInter[n,1] %in% c(hTreatment, hNoise)){
-            #     typeInter[n,1] <- "F"} else {typeInter[n,1] <- "C"}
-            # }
 
             #Second element
             cat("\033[32m", paste("Enter the name of the second effect to be considered in the interaction ", n, sep = " "), "\033[0m\n")
@@ -395,14 +389,6 @@ iCreateParam <- function() {
               hInter[n,1] <-readline()
             }
             pInter[n,2] <-which(colnames(data)== hInter[n,2])
-
-            # #If the element is still not used as Treatment, covariate or noise, ask which type of element it is
-            # if (!(hInter[n,2] %in% c(hCov, hTreatment, hNoise))) {
-            #   typeInter[n,2] <-readline(sprintf("%s\n",green(paste("Which type of variable is this effect (Enter Factor=F or Covariate=C) ? "))))
-            # } else {
-            #   if (hInter[n,2] %in% c(hTreatment, hNoise)){
-            #     typeInter[n,2] <- "F"} else {typeInter[n,2] <- "C"}
-            # }
 
             nlevels_Interaction[n]<-nlevels(as.factor(data[[pInter[n,1]]]))*nlevels(as.factor(data[[pInter[n,2]]]))
             cat("\033[32m", paste("The number of levels for Interaction ", n," is: ", nlevels_Interaction[n], sep = " "), "\033[0m\n")
@@ -476,10 +462,10 @@ iCreateParam <- function() {
         if (nInter != 0) {
           if (nrow(hInter) == 1) {
             # When there's only one row, handle concatenation directly
-            eq.I <- paste(hInter[1, ], collapse = ":")
+            eq.I <- paste(hInter[1, ], collapse = "*")
           } else {
             # Apply for matrices with more than one row
-            eq.I <- apply(hInter, 1, function(x) paste(x, collapse = ":"))
+            eq.I <- apply(hInter, 1, function(x) paste(x, collapse = "*"))
           }
           eq.I.name <- paste(eq.I, collapse = " + ")
         }

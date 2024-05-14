@@ -22,7 +22,7 @@
 #' @param pCov Vector specifying the column positions in the data file of the covariates. Users can specify covariates using either hCov, pCov or both arguments.
 #' @param hInter Matrix of dimensions n x 2 with n being the number of order 2 interactions. Rows specify the names of the components involved in the interactions. Specification can be through either hInter, pInter or both arguments.
 #' @param pInter Matrix of dimensions n x 2 with n being the number of order 2 interactions. Rows specify column positions in the data file of the components involved in the interactions. Specification can be through either hInter, pInter or both arguments.
-#' @param typeInter Matrix n x 2 indicating whether components of each interaction are factors (`"F"`) or covariates (`"C"`). Mandatory if `hInter` or `pInter` are not `NULL`.
+#' @param typeInter Matrix n x 2 indicating whether components of each interaction are factors (`"F"`) or covariates (`"C"`). By default, "F".
 #' @param ShowInter Character vector of length equal to number of interactions indicating how each interaction should be classified, as treatments (`"T"`) or noise (`"N"`). Mandatory if `hInter` or `pInter` are not `NULL`.
 #' @param hRand Vector specifying the names of the random effects. Users can specify random effects using either hRand, pRand or both arguments.
 #' @param pRand Vector specifying the column positions in the data file of the random effects. Users can specify random effects using either hRand, pRand or both arguments.
@@ -69,13 +69,15 @@
 #'   lag = 12
 #' )
 #'
-#'# Example 3: model with treatment, noise, covariates and random effects (data not imported and located in the working directory )
+#'# Example 3: model with treatment, noise, covariates, interactions and random effects (data not imported and located in the working directory )
 #'param_list_complex <- CreateParam(
 #'  file.name = "DataIMF.csv",
 #'  hTrait = c("IMF", "PFat"),
 #'  hTreatment = "AE",
 #'  hNoise = "OP",
 #'  hCov = c("pH", "LW"),
+#'  hInter=matrix(c("AE","OP"), nrow=1),
+#'  ShowInter=c("T"),
 #'  hRand = "Sex",
 #'  Seed = 1234,
 #'  iter = 40000,
@@ -412,11 +414,16 @@ CreateParam <- function(file.name,
           })
         }
 
+        #Check that ShowInter has the same length as nrow of hInter
+        if (nrow(hInter) != length(ShowInter)) {
+          stop("Error: The number of interactions in 'ShowInter' and 'hInter' does not match .")
+        }
+
         # Update param_list for both scenarios
         param_list[["pInter"]] <- pInter <- matrix(pInter, ncol = 2, byrow = TRUE)
         param_list[["nInter"]] <- nInter <- nrow(pInter)
         param_list[["hInter"]] <- hInter <- matrix(hInter, ncol = 2, byrow = TRUE)
-        param_list[["typeInter"]] <- typeInter <- matrix(typeInter, ncol = 2, byrow = TRUE)
+        param_list[["typeInter"]] <- typeInter <- character(0) #To be changed If ever interactions with covariates are permitted
         param_list[["ShowInter"]] <- ShowInter
 
         # Common operations for both hInter and pInter
@@ -488,10 +495,10 @@ CreateParam <- function(file.name,
       if (nInter != 0) {
         if (nrow(hInter) == 1) {
           # When there's only one row, handle concatenation directly
-          eq.I <- paste(hInter[1, ], collapse = ":")
+          eq.I <- paste(hInter[1, ], collapse = "*")
         } else {
           # Apply for matrices with more than one row
-          eq.I <- apply(hInter, 1, function(x) paste(x, collapse = ":"))
+          eq.I <- apply(hInter, 1, function(x) paste(x, collapse = "*"))
         }
         eq.I.name <- paste(eq.I, collapse = " + ")
       }

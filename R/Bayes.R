@@ -307,10 +307,10 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
 
 
   }
-  return(out_bayes) #Always return the list
+
   cat("\n")
   cat("Progam finsihed!! :) ")
-
+  return(out_bayes) #Always return the list
 } #End of the function
 
 
