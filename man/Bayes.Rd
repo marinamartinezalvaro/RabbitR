@@ -23,29 +23,29 @@ Bayes(
 
 \item{bunny}{A list produced by the `bunny` function, including all model specifications and posterior samples of inferences for different traits.}
 
-\item{HPD}{A scalar value between 0 and 1 specifying the desired probability to compute the highest posterior density (HPD) interval. Default value is 0.95. The HPD interval is computed for model mean, treatments, covariates, contrasts, and variance components.}
+\item{HPD}{A scalar value between 0 and 1 specifying the desired probability to compute the highest posterior density (HPD) interval. Default value is 0.95. The HPD interval is computed for model mean, treatments, covariates, comparisons, and variance components.}
 
-\item{P0}{A logical (default is `TRUE`). If `TRUE`, computes the probability that the posterior distribution is greater than zero if the median is positive, or less than zero if the median is negative. This applies to treatments, contrasts, and covariates. For contrasts between treatments expressed as ratios, it computes probabilities of being greater than or less than 1.}
+\item{P0}{A logical (default is `TRUE`). If `TRUE`, computes the probability that the posterior distribution is greater than zero if the median is positive, or less than zero if the median is negative. This applies to treatments, comparisons, and covariates. For comparisons between levels of treatments expressed as ratios, it computes probabilities of being greater than or less than 1.}
 
-\item{K}{A logical(default is `FALSE`). If `TRUE`, computes a "guaranteed" value of the posterior distribution with a specified probability (`probK`). This value is only displayed if its sign matches the sign of the median of the posterior distribution. Applies to treatments, contrasts, covariates, and variance components.}
+\item{K}{A logical(default is `FALSE`). If `TRUE`, computes a "guaranteed" value of the posterior distribution with a specified probability (`probK`). This value is only displayed if its sign matches the sign of the median of the posterior distribution. Applies to treatments, comparisons, covariates, and variance components.}
 
 \item{probK}{A numeric value between 0 and 1 specifying the probability threshold for computing the guaranteed value when `K` is `TRUE`. If `K` is `TRUE` and `probK` is not specified, a default value of 0.80 is used.}
 
-\item{PR}{A logical (default is `FALSE`). If `TRUE`, computes the probability that the posterior distribution is greater than a relevant value (`R`) if the median is positive, or less than `R` if the median is negative. Applies to contrasts only.}
+\item{PR}{A logical (default is `FALSE`). If `TRUE`, computes the probability that the posterior distribution is greater than a relevant value (`R`) if the median is positive, or less than `R` if the median is negative. Applies to comparisons only.}
 
-\item{R}{A numeric vector containing a relevant value for each trait. If `PR` is `TRUE`, this argument is mandatory. For contrasts between treatments expressed as ratios, `R` should be considered in percentage (e.g., 1.1 for a 10 per cent increase). Suggested values are one-third of the standard deviation of the trait for differences, and 10 per cent for ratios.}
+\item{R}{A numeric vector containing a relevant value for each trait. If `PR` is `TRUE`, this argument is mandatory. For comparisons between levels of treatments expressed as ratios, `R` should be considered in percentage (e.g., 1.1 for a 10 per cent increase). Suggested values are one-third of the standard deviation of the trait for differences, and 10 per cent for ratios.}
 
-\item{PS}{A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R` (or between `1/R` and `R` if it's a ratio). Applies to contrasts only.}
+\item{PS}{A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R` (or between `1/R` and `R` if it's a ratio). Applies to comparisons only.}
 
 \item{SaveTable}{A logical flag (default is `TRUE`). If `TRUE`, the inferences of posterior distributions printed to the console are also saved in a CSV file.}
 
-\item{plot}{A logical flag (default is `FALSE`). If `TRUE`, generates and saves plots of posterior distributions for contrasts in .tiff format, highlighting `P0` and `PR` values if applicable.}
+\item{plot}{A logical flag (default is `FALSE`). If `TRUE`, generates and saves plots of posterior distributions for comparisons in .tiff format, highlighting `P0` and `PR` values if applicable.}
 }
 \value{
-Returns a list with computed inferences for each trait, including model means, treatments, contrasts, covariates, variance components, and probabilities associated with specified thresholds.
+Returns a list with computed inferences for each trait, including model means, treatments, comparisons, covariates, variance components, and probabilities associated with specified thresholds.
 }
 \description{
-This function computes posterior chain analysis with Bayesian Statistics. Posterior chains need to be contained in a list generated by the `bunny` function. It evaluates model means, treatments, covariates, contrasts, and variance components using Bayesian inference methods.
+This function computes posterior chain analysis with Bayesian Statistics. Posterior chains need to be contained in a list generated by the `bunny` function. It evaluates model means, treatments, covariates, comparisons, and variance components using Bayesian inference methods.
 }
 \details{
 The `Bayes` function facilitates comprehensive analysis of posterior distributions resulting from Bayesian mixed models. It allows for detailed examination of model parameters, providing insights into the statistical relevance, and uncertainty of estimates. It emphasizes probabilistic interpretations, offering a nuanced understanding of model outputs beyond point estimates.
@@ -68,7 +68,7 @@ bayes_advanced_analysis <- Bayes(
   R = c(0.3, 0.1), # Assuming two traits with relevant values specified
   PS = TRUE, # Compute probability of similarity
   SaveTable = TRUE, # Save detailed inferences in a CSV file
-  plot = TRUE) # Additionally, generate plots for contrasts)
+  plot = TRUE) # Additionally, generate plots for comparisons)
 
 # Example 3: Analyzing treatment ratios of a single trait
 bayes_ratio_analysis <- Bayes(

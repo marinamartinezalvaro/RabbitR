@@ -12,10 +12,10 @@ Bunny(params, Chain = FALSE)
 \item{Chain}{Logical (default=FALSE).  logical value (default=`FALSE`). If set to `TRUE`, the function writes down an excel file with all samples from the posterior distributions of the estimated parameters for each trait for post-hoc analysis.}
 }
 \value{
-A comprehensive list detailing the outcomes of the mixed-effects model analysis. This includes posterior distribution samples for estimated parameters: model mean, residual variance, treatment means, contrasts between treatment levels, covariates and variance components of random effects.
+A comprehensive list detailing the outcomes of the mixed-effects model analysis. This includes posterior distribution samples for estimated parameters: model mean, residual variance, treatment means, comparisons between treatment levels, covariates and variance components of random effects.
 }
 \description{
-This function fits a mixed-effects model to the provided dataset based on specifications in a parameter file. It handles fixed effects, random effects, and interactions of order 2 between fixed effects, performs convergence diagnosis, computes least squares means (LSMeans), and calculates contrasts between treatment levels as defined. This function makes extensive use of MCMCglmm function \insertCite{Hadfield2010mcmc}{RabbitR}.
+This function fits a mixed-effects model to the provided dataset based on specifications in a parameter file. It handles fixed effects, random effects, and interactions of order 2 between fixed effects, performs convergence diagnosis, computes least squares means (LSMeans), and calculates comparisons between treatment levels as defined. This function makes extensive use of MCMCglmm function \insertCite{Hadfield2010mcmc}{RabbitR}.
 }
 \examples{
 \dontrun{
