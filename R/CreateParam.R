@@ -124,7 +124,7 @@ CreateParam <- function(file.name,
         # Determine the file extension
         fileExtension <- tools::file_ext(file.name)
 
-        # Read xlsx, xls and use the modified approach for .csv and .txt files to apcept all kind of delim
+        # Read xlsx, xls and use the modified approach for .csv and .txt files to accept all kind of delim
         data <- switch(fileExtension,
                        csv = {
                          dt <- data.table::fread(file.name, na.strings = na.codes)

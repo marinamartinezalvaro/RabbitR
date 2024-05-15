@@ -44,11 +44,11 @@ iBayes <- function(params, bunny) {
     probK <- NA
   }
 
-  cat(sprintf("%s", "\033[32mDo you want to calculate probability (PR) of contrasts being greater than a relevant value (R) ? (Enter Yes=Y or No=N): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to calculate probability (PR) of comparisons being greater than a relevant value (R) ? (Enter Yes=Y or No=N): \033[0m"))
   PR <- readline()
   PR <- tolower(PR) == "y"
 
-  cat(sprintf("%s", "\033[32mDo you want to calculate probability of similarity of contrasts (PS)? (Enter Yes=Y or No=N): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to calculate probability of similarity of comparisons (PS)? (Enter Yes=Y or No=N): \033[0m"))
   PS <- readline()
   PS <- tolower(PS) == "y"
 
@@ -64,7 +64,7 @@ iBayes <- function(params, bunny) {
   SaveTable <- readline()
   SaveTable <- tolower(SaveTable) == "y"
 
-  cat(sprintf("%s", "\033[32mDo you want to generate and save plots of contrasts? (Enter Yes=Y or No=N):  \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to generate and save plots of comparisons? (Enter Yes=Y or No=N):  \033[0m"))
   plot <- readline()
   plot <- tolower(plot) == "y"
 
