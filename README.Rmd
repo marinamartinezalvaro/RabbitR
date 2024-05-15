@@ -51,9 +51,9 @@ We aim to explore the impact of Sex on IMF and PFat traits. Additionally, we rec
 
 The RabbitR package supports univariate analysis, applying the same univariate model across multiple traits:
 
-IMF = m + Sex + AE + OP + b·LW + Rand(c) + e
+IMF = m + Sex + AE + OP + AE*OP + b·LW + Rand(c) + e
 
-PFat = m + Sex + AE + OP + b·LW + Rand(c) + e
+PFat = m + Sex + AE + OP + AE*OP + b·LW + Rand(c) + e
 
 To carry out our analysis, we'll utilize the CreateParam, Bunny, and Bayes functions. This workflow covers creating a parameter file (CreateParam), executing general linear models and producing posterior distributions (Bunny), and performing inferences (Bayes). For beginners or those less familiar with R, interactive versions are available: iCreateParam for CreateParam and iBayes for Bayes. Additionally, the Rabbit function merges iCreateParam, Bunny, and iBayes into a comprehensive, interactive tool, ideal for educational purposes.
 
@@ -69,6 +69,8 @@ param_list<-CreateParam(
   hTreatment = "Sex",
   askCompare="D",
   hNoise = c("AE", "OP"),
+  hInter=matrix(c("AE","OP"), nrow=1),
+  ShowInter=c("T"),
   hCov = c("LW"),
   hRand = "c")
 
