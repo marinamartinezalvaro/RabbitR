@@ -55,7 +55,7 @@ CreateParam(
 
 \item{pInter}{Matrix of dimensions n x 2 with n being the number of order 2 interactions. Rows specify column positions in the data file of the components involved in the interactions. Specification can be through either hInter, pInter or both arguments.}
 
-\item{typeInter}{Matrix n x 2 indicating whether components of each interaction are factors (`"F"`) or covariates (`"C"`). By default, "F".}
+\item{typeInter}{Matrix n x 2 indicating whether components of each interaction are factors (`"F"`) or covariates (`"C"`). This package version only allows "F", so it is fixed to "F".}
 
 \item{ShowInter}{Character vector of length equal to number of interactions indicating how each interaction should be classified, as treatments (`"T"`) or noise (`"N"`). Mandatory if `hInter` or `pInter` are not `NULL`.}
 
@@ -104,6 +104,7 @@ param_list_basic <- CreateParam(
 # Example 2: using column positions instead of header in some arguments (data preloaded in the environment)
 param_list_positions <- CreateParam(
   file.name = "DataIMF",
+  na.codes="99999",
   pTrait = c(5, 7, 8),  # Corresponds to LW, IMF, PFat
   pTreatment = 1,       # Corresponds to AE
   pNoise = 2,           # Corresponds to OP
@@ -117,6 +118,7 @@ param_list_positions <- CreateParam(
 # Example 3: model with treatment, noise, covariates, interactions and random effects (data not imported and located in the working directory )
 param_list_complex <- CreateParam(
  file.name = "DataIMF.csv",
+ na.codes="99999",
  hTrait = c("IMF", "PFat"),
  hTreatment = "AE",
  hNoise = "OP",
