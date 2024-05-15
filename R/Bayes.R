@@ -145,8 +145,8 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
                }
             cat("---------------------------------------------------\n")
            }
+          compResults[[elem]] <- elemResults
           }
-        compResults[[elem]] <- elemResults
         } #end for treatmeans and compare
 
       if (comp %in% c("Cov", "RandomVariances")) { # For Cov and RandomVariances which are not deeply nested
@@ -239,7 +239,7 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
         #write.csv(df, file="Results.csv")
       }
 
-  #3) If plot=T make plots of th contrasts
+  #3) If plot=T make plots of the contrasts
 
   if (plot && length(bunny[[trait]][["Compare"]]) > 0) {
     for (trait in names(bunny)) {
