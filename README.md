@@ -68,13 +68,14 @@ head(DataIMF)
 
 We aim to explore the impact of Sex on IMF and PFat traits.
 Additionally, we recognize the potential influence of the season when
-data were collected, the parity order of the animals, their LW, and
-their common litter effects on IMF, which necessitates adjustment. In
-this context, Sex is considered our treatment of interest. Other fixed
-effects that require correction but are not our primary focus are
-categorized as Noise effects (AE, OP). Live Weight (LW) is a continuous
-trait and will thus be treated as a covariate. Effects from common
-litter will be modeled as random effects.
+data were collected, the parity order of the animals, the interaction
+between season and parity order, their LW, and their common litter
+effects on IMF, which necessitates adjustment. In this context, Sex is
+considered our treatment of interest. Other fixed effects that require
+correction but are not our primary focus are categorized as Noise
+effects (AE, OP, and AE\*OP). Live Weight (LW) is a continuous trait and
+will thus be treated as a covariate. Effects from common litter will be
+modeled as random effects.
 
 The RabbitR package supports univariate analysis, applying the same
 univariate model across multiple traits:
@@ -94,13 +95,14 @@ comprehensive, interactive tool, ideal for educational purposes.
 
 Lets start creating our parameter file. To initiate our analysis, we’ll
 create a parameter file using a CreateParam function. User can specify
-Traits, Treatments, Noise, covariates, or random effects. You can define
-these either by their column names in the data file (hTrait, hTreatment,
-hNoise, hCov, hRand) or by their positions (pTrait, pTreatment, pNoise,
-pCov, pRand), useful for analyzing multiple traits. The askCompare
-argument lets you choose how to contrast different treatment levels
-(e.g., sex1 and Sex2) - as a difference (askCompare=“D”) or a ratio
-(askCompare=“R”).
+Traits, Treatments, Noise, Interactions of order 2 between fixed effects
+already declared, covariates, or random effects. You can define these
+either by their column names in the data file (hTrait, hTreatment,
+hNoise, hInter, hCov, hRand) or by their positions (pTrait, pTreatment,
+pNoise, pInter, pCov, pRand), useful for analyzing multiple traits. The
+askCompare argument lets you choose how to compare different treatment
+levels (e.g., sex1 and Sex2) - as a difference (askCompare=“D”) or a
+ratio (askCompare=“R”).
 
 ``` r
 
@@ -112,7 +114,7 @@ param_list<-CreateParam(
   askCompare="D",
   hNoise = c("AE", "OP"),
   hInter=matrix(c("AE","OP"), nrow=1),
-  ShowInter=c("T"),
+  ShowInter=c("N"),
   hCov = c("LW"),
   hRand = "c")
 #> 
@@ -230,9 +232,9 @@ bunny_results <- Bunny(params = param_list, Chain = FALSE)
 #> Means computed 
 #> ---------------------------------------------------
 #> 
-#> Computing Contrasts between levels of Treatment effects... 
+#> Computing comparisons between levels of Treatment effects... 
 #> 
-#> Contrasts computed 
+#> Comparisons computed 
 #> 
 #> Covariates computed 
 #> Variances of Random Effects computed 
@@ -284,9 +286,9 @@ bunny_results <- Bunny(params = param_list, Chain = FALSE)
 #> Means computed 
 #> ---------------------------------------------------
 #> 
-#> Computing Contrasts between levels of Treatment effects... 
+#> Computing comparisons between levels of Treatment effects... 
 #> 
-#> Contrasts computed 
+#> Comparisons computed 
 #> 
 #> Covariates computed 
 #> Variances of Random Effects computed 
@@ -297,10 +299,10 @@ bunny_results <- Bunny(params = param_list, Chain = FALSE)
 ```
 
 Function Bunny creates a list containing the samples of the posterior
-chains for the model mean, means of treatment levels, contrats between
-those levels, covariates, variance components (residual and random). The
-bunny output will serve as input for function Bayes, together with my
-param_list object.
+chains for the model mean, means of treatment levels, comparisons
+between those levels, covariates, variance components (residual and
+random). The bunny output will serve as input for function Bayes,
+together with my param_list object.
 
 Although posterior chains might seem complex at first, they offer us the
 ability to make multiple inferences from the entire distribution, not
@@ -309,9 +311,9 @@ function simplifies in-depth analysis of posterior distributions from
 Bayesian mixed models. For instance, we calculate the probability of the
 difference between Sex1 and Sex2 exceeding critical values (0.05 for IMF
 and 1 for PFat) and obtain guaranteed values for treatment means,
-covariates, and contrasts at a 90% confidence level. Enabling plot=TRUE
-visually presents these distributions, with dashed lines at 0 and R
-clarifying the positions of P0, PR, and PS.
+covariates, and comparisons at a 90% confidence level. Enabling
+plot=TRUE visually presents these distributions, with dashed lines at 0
+and R clarifying the positions of P0, PR, and PS.
 
 ``` r
 
@@ -325,7 +327,7 @@ inferences <- Bayes(
    R = c(0.05, 1), # Assuming two traits with relevant values specified
    PS = TRUE, # Compute probability of similarity
    SaveTable = TRUE, # Save detailed inferences in a CSV file
-   plot = TRUE) # Additionally, generate plots for contrasts)
+   plot = TRUE) # Additionally, generate plots for comparisons)
 #>  Bayes Starting ... 
 #> 
 #> 
@@ -367,60 +369,6 @@ inferences <- Bayes(
 #> P0:  0.5016 
 #> Guaranteed Value with prob 0.9 :  NA 
 #> ---------------------------------------------------
-#> AE:OP 1.1 
-#> Median:  1.193676 
-#> Mean:  1.193852 
-#> SD:  0.008676645 
-#> HPD Lower:  1.17646 
-#> HPD Upper:  1.210474 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  1.18296 
-#> ---------------------------------------------------
-#> AE:OP 2.1 
-#> Median:  1.16386 
-#> Mean:  1.163478 
-#> SD:  0.0179647 
-#> HPD Lower:  1.129017 
-#> HPD Upper:  1.199008 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  1.140074 
-#> ---------------------------------------------------
-#> AE:OP 1.2 
-#> Median:  1.136244 
-#> Mean:  1.136071 
-#> SD:  0.02290061 
-#> HPD Lower:  1.091059 
-#> HPD Upper:  1.180448 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  1.107109 
-#> ---------------------------------------------------
-#> AE:OP 2.2 
-#> Median:  1.147277 
-#> Mean:  1.146511 
-#> SD:  0.05478792 
-#> HPD Lower:  1.042352 
-#> HPD Upper:  1.253652 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  1.075022 
-#> ---------------------------------------------------
-#> AE:OP 1.3 
-#> Median:  1.18067 
-#> Mean:  1.182952 
-#> SD:  0.07856725 
-#> HPD Lower:  1.04079 
-#> HPD Upper:  1.34346 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  1.084363 
-#> ---------------------------------------------------
-#> AE:OP 2.3 
-#> Median:  -453.4629 
-#> Mean:  -989.0024 
-#> SD:  97668.32 
-#> HPD Lower:  -183227.5 
-#> HPD Upper:  192591.2 
-#> P0:  0.5016 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> ---------------------------------------------------
 #> Inferences of posterior chains for Compare 
 #> ---------------------------------------------------
 #> Sex 1-2 
@@ -433,171 +381,6 @@ inferences <- Bayes(
 #> Guaranteed Value with prob 0.9 :  NA 
 #> PR with R 0.05 :  0.0056 
 #> PS with R 0.05 :  0.9944 
-#> ---------------------------------------------------
-#> AE:OP 1.1-2.1 
-#> Median:  0.0302283 
-#> Mean:  0.03037378 
-#> SD:  0.02079609 
-#> HPD Lower:  -0.01011574 
-#> HPD Upper:  0.07165686 
-#> P0:  0.9288 
-#> Guaranteed Value with prob 0.9 :  0.00374364 
-#> PR with R 0.05 :  0.1656 
-#> PS with R 0.05 :  0.8344 
-#> ---------------------------------------------------
-#> AE:OP 1.1-1.2 
-#> Median:  0.05793524 
-#> Mean:  0.05778149 
-#> SD:  0.02454429 
-#> HPD Lower:  0.01084488 
-#> HPD Upper:  0.1056387 
-#> P0:  0.9912 
-#> Guaranteed Value with prob 0.9 :  0.02600334 
-#> PR with R 0.05 :  0.628 
-#> PS with R 0.05 :  0.372 
-#> ---------------------------------------------------
-#> AE:OP 1.1-2.2 
-#> Median:  0.04609569 
-#> Mean:  0.04734112 
-#> SD:  0.05546444 
-#> HPD Lower:  -0.05998196 
-#> HPD Upper:  0.1551561 
-#> P0:  0.804 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.4728 
-#> PS with R 0.05 :  0.4896 
-#> ---------------------------------------------------
-#> AE:OP 1.1-1.3 
-#> Median:  0.0126994 
-#> Mean:  0.01090013 
-#> SD:  0.07920663 
-#> HPD Lower:  -0.1456043 
-#> HPD Upper:  0.1595756 
-#> P0:  0.5636 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.3072 
-#> PS with R 0.05 :  0.4732 
-#> ---------------------------------------------------
-#> AE:OP 1.1-2.3 
-#> Median:  454.6586 
-#> Mean:  990.1962 
-#> SD:  97668.32 
-#> HPD Lower:  -192590 
-#> HPD Upper:  183228.7 
-#> P0:  0.5016 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.5016 
-#> PS with R 0.05 :  0 
-#> ---------------------------------------------------
-#> AE:OP 2.1-1.2 
-#> Median:  0.02755565 
-#> Mean:  0.02740771 
-#> SD:  0.02922752 
-#> HPD Lower:  -0.02797199 
-#> HPD Upper:  0.08385146 
-#> P0:  0.83 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.2252 
-#> PS with R 0.05 :  0.7688 
-#> ---------------------------------------------------
-#> AE:OP 2.1-2.2 
-#> Median:  0.01631929 
-#> Mean:  0.01696734 
-#> SD:  0.05653106 
-#> HPD Lower:  -0.08806846 
-#> HPD Upper:  0.1273499 
-#> P0:  0.612 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.2792 
-#> PS with R 0.05 :  0.6024 
-#> ---------------------------------------------------
-#> AE:OP 2.1-1.3 
-#> Median:  -0.01756371 
-#> Mean:  -0.01947364 
-#> SD:  0.08002513 
-#> HPD Lower:  -0.1801124 
-#> HPD Upper:  0.1320113 
-#> P0:  0.5964 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.3488 
-#> PS with R 0.05 :  0.46 
-#> ---------------------------------------------------
-#> AE:OP 2.1-2.3 
-#> Median:  454.6104 
-#> Mean:  990.1658 
-#> SD:  97668.32 
-#> HPD Lower:  -192590.1 
-#> HPD Upper:  183228.7 
-#> P0:  0.5016 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.5016 
-#> PS with R 0.05 :  0 
-#> ---------------------------------------------------
-#> AE:OP 1.2-2.2 
-#> Median:  -0.01112311 
-#> Mean:  -0.01044037 
-#> SD:  0.0602413 
-#> HPD Lower:  -0.1235743 
-#> HPD Upper:  0.1058543 
-#> P0:  0.5716 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.2608 
-#> PS with R 0.05 :  0.5756 
-#> ---------------------------------------------------
-#> AE:OP 1.2-1.3 
-#> Median:  -0.04341168 
-#> Mean:  -0.04688136 
-#> SD:  0.08178417 
-#> HPD Lower:  -0.2112872 
-#> HPD Upper:  0.1082995 
-#> P0:  0.7232 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.472 
-#> PS with R 0.05 :  0.412 
-#> ---------------------------------------------------
-#> AE:OP 1.2-2.3 
-#> Median:  454.6135 
-#> Mean:  990.1384 
-#> SD:  97668.32 
-#> HPD Lower:  -192590.1 
-#> HPD Upper:  183228.7 
-#> P0:  0.5016 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.5016 
-#> PS with R 0.05 :  0 
-#> ---------------------------------------------------
-#> AE:OP 2.2-1.3 
-#> Median:  -0.03505602 
-#> Mean:  -0.03644098 
-#> SD:  0.09464477 
-#> HPD Lower:  -0.2254628 
-#> HPD Upper:  0.1428055 
-#> P0:  0.6488 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.4376 
-#> PS with R 0.05 :  0.3852 
-#> ---------------------------------------------------
-#> AE:OP 2.2-2.3 
-#> Median:  454.6136 
-#> Mean:  990.1489 
-#> SD:  97668.32 
-#> HPD Lower:  -192590.1 
-#> HPD Upper:  183228.7 
-#> P0:  0.5016 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.5016 
-#> PS with R 0.05 :  0 
-#> ---------------------------------------------------
-#> AE:OP 1.3-2.3 
-#> Median:  454.7041 
-#> Mean:  990.1853 
-#> SD:  97668.33 
-#> HPD Lower:  -192590.1 
-#> HPD Upper:  183228.7 
-#> P0:  0.5016 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 0.05 :  0.5016 
-#> PS with R 0.05 :  0 
 #> ---------------------------------------------------
 #> Inferences of posterior chains for Cov 
 #> ---------------------------------------------------
@@ -659,60 +442,6 @@ inferences <- Bayes(
 #> P0:  0.5228 
 #> Guaranteed Value with prob 0.9 :  NA 
 #> ---------------------------------------------------
-#> AE:OP 1.1 
-#> Median:  10.83149 
-#> Mean:  10.83514 
-#> SD:  0.1677673 
-#> HPD Lower:  10.49577 
-#> HPD Upper:  11.14815 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  10.61911 
-#> ---------------------------------------------------
-#> AE:OP 2.1 
-#> Median:  10.21195 
-#> Mean:  10.21424 
-#> SD:  0.3443984 
-#> HPD Lower:  9.539995 
-#> HPD Upper:  10.90501 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  9.772097 
-#> ---------------------------------------------------
-#> AE:OP 1.2 
-#> Median:  10.13795 
-#> Mean:  10.14402 
-#> SD:  0.4204504 
-#> HPD Lower:  9.32378 
-#> HPD Upper:  10.93136 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  9.591773 
-#> ---------------------------------------------------
-#> AE:OP 2.2 
-#> Median:  9.35235 
-#> Mean:  9.333182 
-#> SD:  1.053711 
-#> HPD Lower:  7.214042 
-#> HPD Upper:  11.33864 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  7.994417 
-#> ---------------------------------------------------
-#> AE:OP 1.3 
-#> Median:  9.496957 
-#> Mean:  9.509461 
-#> SD:  1.435073 
-#> HPD Lower:  6.613862 
-#> HPD Upper:  12.19436 
-#> P0:  1 
-#> Guaranteed Value with prob 0.9 :  7.671027 
-#> ---------------------------------------------------
-#> AE:OP 2.3 
-#> Median:  -6333.806 
-#> Mean:  -1419.753 
-#> SD:  99095.25 
-#> HPD Lower:  -189331 
-#> HPD Upper:  202141.9 
-#> P0:  0.5228 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> ---------------------------------------------------
 #> Inferences of posterior chains for Compare 
 #> ---------------------------------------------------
 #> Sex 1-2 
@@ -725,171 +454,6 @@ inferences <- Bayes(
 #> Guaranteed Value with prob 0.9 :  -1.266717 
 #> PR with R 1 :  0.9888 
 #> PS with R 1 :  0.0112 
-#> ---------------------------------------------------
-#> AE:OP 1.1-2.1 
-#> Median:  0.621273 
-#> Mean:  0.6208987 
-#> SD:  0.3986686 
-#> HPD Lower:  -0.1807814 
-#> HPD Upper:  1.372098 
-#> P0:  0.9356 
-#> Guaranteed Value with prob 0.9 :  0.09878104 
-#> PR with R 1 :  0.1772 
-#> PS with R 1 :  0.8228 
-#> ---------------------------------------------------
-#> AE:OP 1.1-1.2 
-#> Median:  0.6774114 
-#> Mean:  0.6911199 
-#> SD:  0.4434718 
-#> HPD Lower:  -0.1519715 
-#> HPD Upper:  1.564032 
-#> P0:  0.9416 
-#> Guaranteed Value with prob 0.9 :  0.1274498 
-#> PR with R 1 :  0.244 
-#> PS with R 1 :  0.756 
-#> ---------------------------------------------------
-#> AE:OP 1.1-2.2 
-#> Median:  1.490075 
-#> Mean:  1.501955 
-#> SD:  1.071504 
-#> HPD Lower:  -0.5924205 
-#> HPD Upper:  3.578754 
-#> P0:  0.9148 
-#> Guaranteed Value with prob 0.9 :  0.1096211 
-#> PR with R 1 :  0.6896 
-#> PS with R 1 :  0.2996 
-#> ---------------------------------------------------
-#> AE:OP 1.1-1.3 
-#> Median:  1.329375 
-#> Mean:  1.325676 
-#> SD:  1.440467 
-#> HPD Lower:  -1.403719 
-#> HPD Upper:  4.216679 
-#> P0:  0.8224 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.5884 
-#> PS with R 1 :  0.36 
-#> ---------------------------------------------------
-#> AE:OP 1.1-2.3 
-#> Median:  6344.658 
-#> Mean:  1430.588 
-#> SD:  99095.25 
-#> HPD Lower:  -202130.6 
-#> HPD Upper:  189342.1 
-#> P0:  0.5228 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.5228 
-#> PS with R 1 :  0 
-#> ---------------------------------------------------
-#> AE:OP 2.1-1.2 
-#> Median:  0.05759493 
-#> Mean:  0.07022118 
-#> SD:  0.5488466 
-#> HPD Lower:  -1.001815 
-#> HPD Upper:  1.089162 
-#> P0:  0.5472 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.0424 
-#> PS with R 1 :  0.9352 
-#> ---------------------------------------------------
-#> AE:OP 2.1-2.2 
-#> Median:  0.8645986 
-#> Mean:  0.8810566 
-#> SD:  1.0826 
-#> HPD Lower:  -1.314689 
-#> HPD Upper:  2.904502 
-#> P0:  0.798 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.4516 
-#> PS with R 1 :  0.502 
-#> ---------------------------------------------------
-#> AE:OP 2.1-1.3 
-#> Median:  0.7133779 
-#> Mean:  0.7047778 
-#> SD:  1.466253 
-#> HPD Lower:  -1.936912 
-#> HPD Upper:  3.819265 
-#> P0:  0.6776 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.4208 
-#> PS with R 1 :  0.4644 
-#> ---------------------------------------------------
-#> AE:OP 2.1-2.3 
-#> Median:  6343.588 
-#> Mean:  1429.967 
-#> SD:  99095.26 
-#> HPD Lower:  -202131.5 
-#> HPD Upper:  189341.7 
-#> P0:  0.5228 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.5228 
-#> PS with R 1 :  0 
-#> ---------------------------------------------------
-#> AE:OP 1.2-2.2 
-#> Median:  0.7922738 
-#> Mean:  0.8108354 
-#> SD:  1.134922 
-#> HPD Lower:  -1.413278 
-#> HPD Upper:  3.004246 
-#> P0:  0.7676 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.4332 
-#> PS with R 1 :  0.5116 
-#> ---------------------------------------------------
-#> AE:OP 1.2-1.3 
-#> Median:  0.6441827 
-#> Mean:  0.6345566 
-#> SD:  1.480735 
-#> HPD Lower:  -2.151404 
-#> HPD Upper:  3.620949 
-#> P0:  0.6696 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.4036 
-#> PS with R 1 :  0.4648 
-#> ---------------------------------------------------
-#> AE:OP 1.2-2.3 
-#> Median:  6343.901 
-#> Mean:  1429.897 
-#> SD:  99095.23 
-#> HPD Lower:  -202131.8 
-#> HPD Upper:  189341.1 
-#> P0:  0.5228 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.5228 
-#> PS with R 1 :  0 
-#> ---------------------------------------------------
-#> AE:OP 2.2-1.3 
-#> Median:  -0.1573003 
-#> Mean:  -0.1762788 
-#> SD:  1.783203 
-#> HPD Lower:  -3.598816 
-#> HPD Upper:  3.299606 
-#> P0:  0.5376 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.3184 
-#> PS with R 1 :  0.434 
-#> ---------------------------------------------------
-#> AE:OP 2.2-2.3 
-#> Median:  6343.205 
-#> Mean:  1429.086 
-#> SD:  99095.26 
-#> HPD Lower:  -202130.3 
-#> HPD Upper:  189340 
-#> P0:  0.5228 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.5228 
-#> PS with R 1 :  0 
-#> ---------------------------------------------------
-#> AE:OP 1.3-2.3 
-#> Median:  6342.705 
-#> Mean:  1429.262 
-#> SD:  99095.18 
-#> HPD Lower:  -202129.1 
-#> HPD Upper:  189340.9 
-#> P0:  0.5228 
-#> Guaranteed Value with prob 0.9 :  NA 
-#> PR with R 1 :  0.5228 
-#> PS with R 1 :  0 
 #> ---------------------------------------------------
 #> Inferences of posterior chains for Cov 
 #> ---------------------------------------------------
