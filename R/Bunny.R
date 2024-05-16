@@ -596,6 +596,24 @@ Bunny <- function(params, Chain=FALSE) {
         }
         writeData(OUT, sheet = "Means", x = treatMeans_df, colNames = TRUE, rowNames = FALSE)
 
+        addWorksheet(OUT, "Effects")
+        #Need to properly set up colnames as atm its a list
+        treatEffects_df <- data.frame(matrix(ncol = 0, nrow = 1))
+        for (treatment in names(treatEffects)) {
+          levels <- treatEffects[[treatment]]
+          col_names <- paste(treatment, names(levels), sep = "")
+
+          # Create a named list where each element will become a column
+          levels_list <- setNames(as.list(levels), col_names)
+
+          # Convert the named list directly into a single-row dataframe
+          temp_df <- data.frame(levels_list, check.names = FALSE)
+
+          # Combine the temp_df with treatMeans_df. Now both dataframes should have 1 row.
+          treatEffects_df <- cbind(treatEffects_df, temp_df)
+        }
+        writeData(OUT, sheet = "Effects", x = treatEffects_df, colNames = TRUE, rowNames = FALSE)
+
         addWorksheet(OUT, "Comparisons")
         #Need to properly set up colnames as atm its a list
         #contrasts_df <- as.data.frame(contrasts_list)
