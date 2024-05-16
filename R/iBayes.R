@@ -48,7 +48,7 @@ iBayes <- function(params, bunny) {
   PR <- readline()
   PR <- tolower(PR) == "y"
 
-  cat(sprintf("%s", "\033[32mDo you want to calculate probability of similarity of comparisons (PS)? (Enter Yes=Y or No=N): \033[0m"))
+  cat(sprintf("%s", "\033[32mDo you want to calculate probability of similitude of comparisons (PS)? (Enter Yes=Y or No=N): \033[0m"))
   PS <- readline()
   PS <- tolower(PS) == "y"
 

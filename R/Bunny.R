@@ -405,7 +405,7 @@ Bunny <- function(params, Chain=FALSE) {
     }
 
 
-    # 8) For each trait: Compute differences or ratios between levels of Treatments if any
+    # 8) For each trait: Compute effects and differences or ratios between levels of Treatments if any
 
     # 8.1. Differentiate between LSMeans of Treatments and Noise
     treatMeans <- list()
@@ -445,7 +445,18 @@ Bunny <- function(params, Chain=FALSE) {
       }
     }
 
-    # 8.2. If there are any treatments specified, compute comparisons
+    # 8.2. If there are any treatments specified, compute Effects (treatMeans - ModelMean)
+    if (length(treatMeans) > 0) {
+      cat("\nComputing the Effects of Treatments... \n")
+      treatEffects<- treatMeans
+      for (treatment in names(treatMeans)){
+        for (subElem in names(treatMeans[[treatment]])) {
+          treatEffects[[treatment]][[subElem]] <- treatEffects[[treatment]][[subElem]] - Preddata_df
+        }
+      }
+    }
+
+    # 8.3. If there are any treatments specified, compute comparisons
     if (length(treatMeans) > 0) {
       cat("\nComputing comparisons between levels of Treatment effects... \n")
 
@@ -499,6 +510,7 @@ Bunny <- function(params, Chain=FALSE) {
       contrasts_list <- list()
     }
 
+
     # 9) For each trait: extract samples for covariates estimates if any
 
     # Check if params$hCov is not NULL
@@ -531,6 +543,7 @@ Bunny <- function(params, Chain=FALSE) {
     bunny_trait$Convergence <- z_scores
     bunny_trait$RandomVariances <- RandomVar_samples
     bunny_trait$ResVariance <- mcmcVar[, index, drop = FALSE]
+    bunny_trait$treatEffects <- treatEffects
     bunny_trait$treatMeans <- treatMeans
     bunny_trait$noiseMeans <- noiseMeans
     bunny_trait$Compare <- contrasts_list

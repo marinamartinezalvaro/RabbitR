@@ -10,7 +10,7 @@
 #' @param probK A numeric value between 0 and 1 specifying the probability threshold for computing the guaranteed value when `K` is `TRUE`. If `K` is `TRUE` and `probK` is not specified, a default value of 0.80 is used.
 #' @param PR A logical (default is `FALSE`). If `TRUE`, computes the probability that the posterior distribution is greater than a relevant value (`R`) if the median is positive, or less than `R` if the median is negative.
 #' @param R A scalar specifying a relevant value for computing `PR`. It's mandatory if `PR` or `PS` is `TRUE`.
-#' @param PS A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R`
+#' @param PS A logical (default is `FALSE`). If `TRUE`, computes the probability of similitude, i.e., the probability that the posterior distribution lies within `-R` to `R`
 #' @param askCompare Specifies the mode of comparison, either "D" for differences or "R" for ratios, affecting how `PR` and `PS` are calculated. If "D", PR is computed assuming -R as threshold if the median is <0, and PS is computed between -R and R. If "R", PR is computed assuming 1/R as threshold if the median is <1, and PS is computed between 1/R and R.
 #'
 #' @return Returns a numeric vector containing calculated inferences from the posterior samples
@@ -67,7 +67,7 @@ ComputeInferences <- function(samples, HPD=0.95, P0=TRUE, K=FALSE, probK=0.8, PR
     }
   }
 
-  # Calculate Probability of Relevance and Probability of similarity
+  # Calculate Probability of Relevance and Probability of similitude
   if ((PR || PS) && !is.null(R)) {
     if (askCompare == "D") {
       if (PR) {pr <- if(est > 0) { length(which(samples > R)) / length(samples) } else { length(which(samples < -R)) / length(samples) }}

@@ -361,7 +361,7 @@ iCreateParam <- function() {
           ShowInter<-NULL
 
           cat("\n")
-          cat(sprintf("%s ", "\033[32mInteractions can be considered only between fixed effects already declared as noise or treatments \033[0m"))
+          cat(sprintf("%s ", "\033[32mInteractions can be defined between treatments, but also between noise effects or between treatments and noise \033[0m"))
           cat("\n")
           for (n in 1:nInter){
             cat("\033[32m", paste("Let's define the Interaction ", n, sep = " "), "\033[0m\n")

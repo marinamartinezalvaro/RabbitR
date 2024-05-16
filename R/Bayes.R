@@ -15,7 +15,7 @@
 #' @param probK A numeric value between 0 and 1 specifying the probability threshold for computing the guaranteed value when `K` is `TRUE`. If `K` is `TRUE` and `probK` is not specified, a default value of 0.80 is used.
 #' @param PR A logical (default is `FALSE`). If `TRUE`, computes the probability that the posterior distribution is greater than a relevant value (`R`) if the median is positive, or less than `R` if the median is negative. Applies to comparisons only.
 #' @param R A numeric vector containing a relevant value for each trait. If `PR` is `TRUE`, this argument is mandatory. For comparisons between levels of treatments expressed as ratios, `R` should be considered in percentage (e.g., 1.1 for a 10 per cent increase). Suggested values are one-third of the standard deviation of the trait for differences, and 10 per cent for ratios.
-#' @param PS A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R` (or between `1/R` and `R` if it's a ratio). Applies to comparisons only.
+#' @param PS A logical (default is `FALSE`). If `TRUE`, computes the probability of similitude, i.e., the probability that the posterior distribution lies within `-R` to `R` (or between `1/R` and `R` if it's a ratio). Applies to comparisons only.
 #' @param SaveTable  A logical flag (default is `TRUE`). If `TRUE`, the inferences of posterior distributions printed to the console are also saved in a CSV file.
 #' @param plot A logical flag (default is `FALSE`). If `TRUE`, generates and saves plots of posterior distributions for comparisons in .tiff format, highlighting `P0` and `PR` values if applicable.
 #'
@@ -42,7 +42,7 @@
 #'   probK = 0.90, # With 90% probability
 #'   PR = TRUE, # Compute the probability of the posterior chain being greater than a relevant value
 #'   R = c(0.3, 0.1), # Assuming two traits with relevant values specified
-#'   PS = TRUE, # Compute probability of similarity
+#'   PS = TRUE, # Compute probability of similitude
 #'   SaveTable = TRUE, # Save detailed inferences in a CSV file
 #'   plot = TRUE) # Additionally, generate plots for comparisons)
 #'
@@ -109,7 +109,7 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
   cat("---------------------------------------------------\n")
 
   # Define other components to process
-  components <- c("treatMeans","Compare", "Cov", "RandomVariances")
+  components <- c("treatMeans","treatEffects", "Compare", "Cov", "RandomVariances")
   for (comp in components) {
     # Initialize a list to hold inferences of each component
     compResults <- list()
@@ -119,7 +119,7 @@ Bayes <- function(params, bunny, HPD=0.95, P0=TRUE,
       cat("---------------------------------------------------\n")
 
       # Handling nested lists in treatMeans and Compare
-      if (comp %in% c("treatMeans", "Compare")) { #,
+      if (comp %in% c("treatMeans", "treatEffects", "Compare")) { #,
         # Iterate through each list element
         for (elem in names(bunny[[trait]][[comp]])) {
           # Each element may contain multiple subelements
