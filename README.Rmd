@@ -47,13 +47,13 @@ head(DataIMF)
 ```
 
 
-We aim to explore the impact of Sex on IMF and PFat traits. Additionally, we recognize the potential influence of the season when data were collected, the parity order of the animals, the interaction between season and parity order, their LW, and their common litter effects on IMF, which necessitates adjustment. In this context, Sex is considered our treatment of interest. Other fixed effects that require correction but are not our primary focus are categorized as Noise effects (AE, OP, and AE*OP). Live Weight (LW) is a continuous trait and will thus be treated as a covariate. Effects from common litter will be modeled as random effects.
+We aim to explore the impact of Sex on IMF and PFat traits. Additionally, we recognize the potential influence of the season when data were collected, the parity order of the animals, the interaction between season and Sex, their LW, and their common litter effects on IMF, which necessitates adjustment. In this context, Sex is considered our treatment of interest. Other fixed effects that require correction but are not our primary focus are categorized as Noise effects (AE, OP, and AE*OP). Live Weight (LW) is a continuous trait and will thus be treated as a covariate. Effects from common litter will be modeled as random effects.
 
 The RabbitR package supports univariate analysis, applying the same univariate model across multiple traits:
 
-IMF = m + Sex + AE + OP + AE*OP + b·LW + Rand(c) + e
+IMF = m + Sex + AE + OP + AE*Sex + b·LW + Rand(c) + e
 
-PFat = m + Sex + AE + OP + AE*OP + b·LW + Rand(c) + e
+PFat = m + Sex + AE + OP + AE*Sex + b·LW + Rand(c) + e
 
 To carry out our analysis, we'll utilize the CreateParam, Bunny, and Bayes functions. This workflow covers creating a parameter file (CreateParam), executing general linear models and producing posterior distributions (Bunny), and performing inferences (Bayes). For beginners or those less familiar with R, interactive versions are available: iCreateParam for CreateParam and iBayes for Bayes. Additionally, the Rabbit function merges iCreateParam, Bunny, and iBayes into a comprehensive, interactive tool, ideal for educational purposes.
 
@@ -69,7 +69,7 @@ param_list<-CreateParam(
   hTreatment = "Sex",
   askCompare="D",
   hNoise = c("AE", "OP"),
-  hInter=matrix(c("AE","OP"), nrow=1),
+  hInter=matrix(c("AE","Sex"), nrow=1),
   ShowInter=c("N"),
   hCov = c("LW"),
   hRand = "c")
@@ -85,9 +85,9 @@ bunny_results <- Bunny(params = param_list, Chain = FALSE)
 ```
 
 
-Function Bunny creates a list containing the samples of the posterior chains for the model mean, means of treatment levels, comparisons between those levels, covariates, variance components (residual and random). The bunny output will serve as input for function Bayes, together with my param_list object.
+Function Bunny creates a list containing the samples of the posterior chains for the model mean, means of treatment levels, their effects (substracting the model mean), comparisons between those levels, covariates, variance components (residual and random). The bunny output will serve as input for function Bayes, together with my param_list object.
 
-Although posterior chains might seem complex at first, they offer us the ability to make multiple inferences from the entire distribution, not just single-point estimates-making our analysis more engaging. The function simplifies in-depth analysis of posterior distributions from Bayesian mixed models. For instance, we calculate the probability of the difference between Sex1 and Sex2 exceeding critical values (0.05 for IMF and 1 for PFat) and obtain guaranteed values for treatment means, covariates, and comparisons at a 90% confidence level. Enabling plot=TRUE visually presents these distributions, with dashed lines at 0 and R clarifying the positions of P0, PR, and PS. 
+Although posterior chains might seem complex at first, they offer us the ability to make multiple inferences from the entire distribution, not just single-point estimates-making our analysis more engaging. The function simplifies in-depth analysis of posterior distributions from Bayesian mixed models. For instance, we calculate the probability of the difference between Sex1 and Sex2 exceeding critical values (0.05 for IMF and 1 for PFat) and obtain guaranteed values for treatment means, treatment effects, covariates, and comparisons at a 90% confidence level. Enabling plot=TRUE visually presents these distributions, with dashed lines at 0 and R clarifying the positions of P0, PR, and PS. 
 
 ```{r Bayes, echo = TRUE}
 
