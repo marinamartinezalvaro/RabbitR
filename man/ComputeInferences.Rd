@@ -31,7 +31,7 @@ ComputeInferences(
 
 \item{R}{A scalar specifying a relevant value for computing `PR`. It's mandatory if `PR` or `PS` is `TRUE`.}
 
-\item{PS}{A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R`}
+\item{PS}{A logical (default is `FALSE`). If `TRUE`, computes the probability of similitude, i.e., the probability that the posterior distribution lies within `-R` to `R`}
 
 \item{askCompare}{Specifies the mode of comparison, either "D" for differences or "R" for ratios, affecting how `PR` and `PS` are calculated. If "D", PR is computed assuming -R as threshold if the median is <0, and PS is computed between -R and R. If "R", PR is computed assuming 1/R as threshold if the median is <1, and PS is computed between 1/R and R.}
 }

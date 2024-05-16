@@ -451,7 +451,7 @@ Bunny <- function(params, Chain=FALSE) {
       treatEffects<- treatMeans
       for (treatment in names(treatMeans)){
         for (subElem in names(treatMeans[[treatment]])) {
-          treatEffects[[treatment]][[subElem]] <- treatEffects[[treatment]][[subElem]] - Preddata_df
+          treatEffects[[treatment]][[subElem]] <- treatEffects[[treatment]][[subElem]] - ModelMean
         }
       }
     }

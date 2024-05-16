@@ -35,7 +35,7 @@ Bayes(
 
 \item{R}{A numeric vector containing a relevant value for each trait. If `PR` is `TRUE`, this argument is mandatory. For comparisons between levels of treatments expressed as ratios, `R` should be considered in percentage (e.g., 1.1 for a 10 per cent increase). Suggested values are one-third of the standard deviation of the trait for differences, and 10 per cent for ratios.}
 
-\item{PS}{A logical (default is `FALSE`). If `TRUE`, computes the probability of similarity, i.e., the probability that the posterior distribution lies within `-R` to `R` (or between `1/R` and `R` if it's a ratio). Applies to comparisons only.}
+\item{PS}{A logical (default is `FALSE`). If `TRUE`, computes the probability of similitude, i.e., the probability that the posterior distribution lies within `-R` to `R` (or between `1/R` and `R` if it's a ratio). Applies to comparisons only.}
 
 \item{SaveTable}{A logical flag (default is `TRUE`). If `TRUE`, the inferences of posterior distributions printed to the console are also saved in a CSV file.}
 
@@ -66,7 +66,7 @@ bayes_advanced_analysis <- Bayes(
   probK = 0.90, # With 90\% probability
   PR = TRUE, # Compute the probability of the posterior chain being greater than a relevant value
   R = c(0.3, 0.1), # Assuming two traits with relevant values specified
-  PS = TRUE, # Compute probability of similarity
+  PS = TRUE, # Compute probability of similitude
   SaveTable = TRUE, # Save detailed inferences in a CSV file
   plot = TRUE) # Additionally, generate plots for comparisons)
 
